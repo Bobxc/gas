@@ -445,18 +445,15 @@ p {
 
 	.searchWrop {
 		width: 400rpx;
-
 		.icon {
 			width: 96rpx;
 			height: 60rpx;
-
 			image {
 				border: 1px solid #000000;
 				padding-top: 0;
 				height: 10rpx;
 				width: 10rpx;
 			}
-
 			span {
 				width: 72rpx;
 				height: 33rpx;
@@ -467,7 +464,6 @@ p {
 				color: rgba(255, 255, 255, 1);
 			}
 		}
-
 		align-items: center;
 		flex: 1;
 		display: flex;

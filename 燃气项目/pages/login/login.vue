@@ -16,8 +16,23 @@
 			<div class="inputLogo">
 				<span><image src="../../static/image/roundvpnkey.png" mode=""></image></span>
 			</div>
-			<input class="toInput" :type="flag" value="password" @click="hidden" v-model="password" @blur="leave" maxlength="16" placeholder="请输入密码" />
-			<div class="statrc" @click="isAnsol"><span class="iconfont" :class="chack"></span></div>
+			<input
+				class="toInput"
+				:type="flag"
+				value="password"
+				@click="hidden"
+				v-model="password"
+				@blur="leave"
+				maxlength="16"
+				placeholder="请输入密码"
+				style="color: grey; font-size: 16px;"
+			/>
+			<div @click="isAnsol" v-if="flag == 'password'" class="statrc" style="display: flex; align-items: center; justify-content: center;">
+				<image src="../../static/image/close.png" style="width: 44rpx; height: 44rpx;"></image>
+			</div>
+			<div @click="isAnsol" v-else class="statrc" style="display: flex; align-items: center; justify-content: center;">
+				<image src="../../static/image/open.png" style="width: 44rpx; height: 44rpx;"></image>
+			</div>
 		</view>
 		<button class="register" @click="toEnter()">登录</button>
 
@@ -38,6 +53,7 @@ export default {
 			chack: 'icon-biyan',
 			flag: 'password',
 			styleuse: 'text',
+			close: 'password',
 			url: '',
 			F_token: '',
 			organization_id: '  ',
@@ -65,13 +81,14 @@ export default {
 		//判断图标是否闭眼还是开眼
 		isAnsol() {
 			let n = this.num++;
+			console.log(n);
 			if (n % 2 == 1) {
-				this.chack = 'icon-kaiyanjing';
+				this.chack = 'eye';
 				this.flag = this.styleuse;
 			}
 			if (n % 2 == 0) {
-				this.chack = 'icon-biyan';
-				this.flag = this.flag;
+				this.chack = 'eye-slash';
+				this.flag = this.close;
 			}
 		},
 		//判断用户是否输入了密码

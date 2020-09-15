@@ -339,6 +339,7 @@ var render = function() {
           ),
           _c("v-uni-input", {
             staticClass: _vm._$g(14, "sc"),
+            staticStyle: { color: "grey", "font-size": "16px" },
             attrs: {
               type: _vm._$g(14, "a-type"),
               value: "password",
@@ -362,34 +363,63 @@ var render = function() {
               expression: "password"
             }
           }),
-          _c(
-            "div",
-            {
-              staticClass: _vm._$g(15, "sc"),
-              attrs: { _i: 15 },
-              on: {
-                click: function($event) {
-                  return _vm.$handleViewEvent($event)
-                }
-              }
-            },
-            [
-              _c("span", {
-                staticClass: _vm._$g(16, "sc"),
-                class: _vm._$g(16, "c"),
-                attrs: { _i: 16 }
-              })
-            ],
-            1
-          )
+          _vm._$g(15, "i")
+            ? _c(
+                "div",
+                {
+                  staticClass: _vm._$g(15, "sc"),
+                  staticStyle: {
+                    display: "flex",
+                    "align-items": "center",
+                    "justify-content": "center"
+                  },
+                  attrs: { _i: 15 },
+                  on: {
+                    click: function($event) {
+                      return _vm.$handleViewEvent($event)
+                    }
+                  }
+                },
+                [
+                  _c("v-uni-image", {
+                    staticStyle: { width: "44rpx", height: "44rpx" },
+                    attrs: { src: _vm._$g(16, "a-src"), _i: 16 }
+                  })
+                ],
+                1
+              )
+            : _c(
+                "div",
+                {
+                  staticClass: _vm._$g(17, "sc"),
+                  staticStyle: {
+                    display: "flex",
+                    "align-items": "center",
+                    "justify-content": "center"
+                  },
+                  attrs: { _i: 17 },
+                  on: {
+                    click: function($event) {
+                      return _vm.$handleViewEvent($event)
+                    }
+                  }
+                },
+                [
+                  _c("v-uni-image", {
+                    staticStyle: { width: "44rpx", height: "44rpx" },
+                    attrs: { src: _vm._$g(18, "a-src"), _i: 18 }
+                  })
+                ],
+                1
+              )
         ],
         1
       ),
       _c(
         "v-uni-button",
         {
-          staticClass: _vm._$g(17, "sc"),
-          attrs: { _i: 17 },
+          staticClass: _vm._$g(19, "sc"),
+          attrs: { _i: 19 },
           on: {
             click: function($event) {
               return _vm.$handleViewEvent($event)
@@ -400,10 +430,10 @@ var render = function() {
       ),
       _c(
         "v-uni-view",
-        { staticClass: _vm._$g(18, "sc"), attrs: { _i: 18 } },
+        { staticClass: _vm._$g(20, "sc"), attrs: { _i: 20 } },
         [
           _c("v-uni-image", {
-            attrs: { src: _vm._$g(19, "a-src"), mode: "", _i: 19 }
+            attrs: { src: _vm._$g(21, "a-src"), mode: "", _i: 21 }
           })
         ],
         1
@@ -12002,7 +12032,12 @@ var render = function() {
             {
               key: val,
               staticClass: _vm._$g("5-" + $30, "sc"),
-              attrs: { _i: "5-" + $30 }
+              attrs: { _i: "5-" + $30 },
+              on: {
+                click: function($event) {
+                  return _vm.$handleViewEvent($event)
+                }
+              }
             },
             [
               _c(
@@ -12018,14 +12053,7 @@ var render = function() {
                   ]),
                   _c(
                     "span",
-                    {
-                      attrs: { _i: "8-" + $30 },
-                      on: {
-                        click: function($event) {
-                          return _vm.$handleViewEvent($event)
-                        }
-                      }
-                    },
+                    { attrs: { _i: "8-" + $30 } },
                     [
                       _c("v-uni-image", {
                         attrs: {
@@ -12072,7 +12100,14 @@ var render = function() {
                         {
                           key: item,
                           staticClass: _vm._$g("12-" + $30 + "-" + $31, "sc"),
-                          attrs: { _i: "12-" + $30 + "-" + $31 }
+                          attrs: { _i: "12-" + $30 + "-" + $31 },
+                          on: {
+                            click: function($event) {
+                              return _vm.$handleViewEvent($event, {
+                                stop: true
+                              })
+                            }
+                          }
                         },
                         [
                           _c("v-uni-checkbox", {
@@ -12086,11 +12121,6 @@ var render = function() {
                                 "a-checked"
                               ),
                               _i: "13-" + $30 + "-" + $31
-                            },
-                            on: {
-                              click: function($event) {
-                                return _vm.$handleViewEvent($event)
-                              }
                             }
                           }),
                           _c(

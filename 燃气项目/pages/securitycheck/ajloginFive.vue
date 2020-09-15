@@ -5,15 +5,16 @@
 			<div class="little">入户安检如发生下列异常情况请在口内打钩</div>
 		</div>
 		<ul class="father">
-			<li class="fatherList" v-for="(val, key) in dataList" :key="key">
+			<li class="fatherList" v-for="(val, key) in dataList" :key="key" @click="chackShow(key)">
 				<div class="bigTitle" :style="{ background: key % 2 == 1 ? '#F0F0FF' : '#F5F7FF' }">
 					<p>{{ val.title }}</p>
-					<span @click="chackShow(key)"><image :src="val.image" altchackShow="#"></image></span>
+					<!-- <span @click="chackShow(key)"><image :src="val.image" altchackShow="#"></image></span> -->
+					<span><image :src="val.image" altchackShow="#"></image></span>
 				</div>
 				<div class="warp" v-show="val.show">
 					<ul class="childen" >
-						<li class="childenList" v-for="(item, index) in val.list" :key="index">
-							<checkbox :value="item.value" :checked="item.checkbox" @click="checkedBox(item)"/>
+						<li class="childenList" v-for="(item, index) in val.list" :key="index" @click.stop="checkedBox(item)">
+							<checkbox :value="item.value" :checked="item.checkbox" />
 							<span>{{ item.name }}</span>
 						</li>
 					</ul>
