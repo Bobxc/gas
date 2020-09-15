@@ -1,0 +1,44 @@
+{
+  "id": "1896421",
+  "name": "ga's",
+  "font_family": "iconfont",
+  "css_prefix_text": "icon-",
+  "description": "",
+  "glyphs": [
+    {
+      "icon_id": "7335624",
+      "name": "返回",
+      "font_class": "fanhui",
+      "unicode": "eb44",
+      "unicode_decimal": 60228
+    },
+    {
+      "icon_id": "859415",
+      "name": "闭眼",
+      "font_class": "biyan",
+      "unicode": "e611",
+      "unicode_decimal": 58897
+    },
+    {
+      "icon_id": "1613371",
+      "name": "密码",
+      "font_class": "mima",
+      "unicode": "e603",
+      "unicode_decimal": 58883
+    },
+    {
+      "icon_id": "8949037",
+      "name": "用户",
+      "font_class": "yonghu",
+      "unicode": "e660",
+      "unicode_decimal": 58976
+    },
+    {
+      "icon_id": "9575917",
+      "name": "开眼睛",
+      "font_class": "kaiyanjing",
+      "unicode": "e6a7",
+      "unicode_decimal": 59047
+    }
+  ]
+}
