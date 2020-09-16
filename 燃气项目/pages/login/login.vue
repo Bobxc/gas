@@ -68,6 +68,11 @@ export default {
 			}
 		});
 	},
+	//监听手机端返回键
+	onBackPress() {
+		plus.runtime.quit();
+		return true; //return true的意思是禁止返回到上一个界面
+	},
 	methods: {
 		// 判断密码
 		leave() {

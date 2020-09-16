@@ -51,21 +51,7 @@
 			},
 		 methods: {
 				close(){
-					if(this.role_type_id==4){
-						uni.navigateTo({
-							url:'./adduser',
-							
-						})
-					}if(this.role_type_id==5){
-						uni.navigateTo({
-							url:'./adduser'
-						})
-					}
-					if(this.role_type_id==6){
-						uni.navigateTo({
-							url:'./adduser'
-						})
-					}
+					uni.navigateBack({})
 				}
 		    }
 }
