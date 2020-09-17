@@ -38,7 +38,7 @@
 		<view class="bottom_information">
 			<view class="content">
 				<ul class="cardlist" v-for="(item, index) in cardlists" :key="index">
-					<li style="font-size: 28rpx;height: 40rpx; padding-top: 24rpx;">钢瓶规格 :{{ item.order_basic_info_id }}</li>
+					<li style="font-size: 28rpx;height: 40rpx; padding-top: 24rpx;">钢瓶规格 :{{ item.specification_id }}</li>
 					<li style="font-size: 28rpx;">
 						数量 :
 						<span style="color: #0069FF;">{{ item.num }}瓶</span>

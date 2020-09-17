@@ -24,7 +24,7 @@
 			<view class="content">
 				<view v-if="cut === 0">
 					<ul class="cardlist" v-for="(item, index) in acceptableOrders" :key="index" >
-						<li style="font-size: 28rpx;height: 40rpx; padding-top: 24rpx;">钢瓶规格 :{{ item.enterprise_number }}</li>
+						<li style="font-size: 28rpx;height: 40rpx; padding-top: 24rpx;">钢瓶规格 :{{ item.specification_id }}</li>
 						<li style="font-size: 28rpx;color: #0069FF;">
 							<span style="color: #000000; margin-right: 5px;">数量:</span>
 							{{ item.order_status_id }}瓶
@@ -42,7 +42,7 @@
 				</view>
 				<view v-if="cut === 1">
 					<ul class="cardlist" v-for="(item, index) in orderReceived" :key="index">
-						<li style="font-size: 28rpx;height: 40rpx; padding-top: 24rpx;">钢瓶规格 :{{ item.enterprise_number }}</li>
+						<li style="font-size: 28rpx;height: 40rpx; padding-top: 24rpx;">钢瓶规格 :{{ item.specification_id }}</li>
 						<li style="font-size: 28rpx;color: #0069FF;">
 							<span style="color: #000000; margin-right: 5px;">数量:</span>
 							{{ item.order_status_id }}瓶
@@ -268,7 +268,7 @@ export default {
 
 		.button-two {
 			margin-left: 24rpx;
-			width: 210rpx;
+			width: 250rpx;
 			line-height: 76rpx;
 			display: inline-block;
 			font-size: 35rpx;
