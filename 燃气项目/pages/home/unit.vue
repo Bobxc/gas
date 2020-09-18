@@ -98,7 +98,7 @@
 
 <script>
 import pickRegions from '../../components/pick-regions/pick-regions.vue';
-import { apiAddres, addUser } from '../../common/common.js';
+import { apiAddres, addUser, uploadFile } from '../../common/common.js';
 export default {
 	comments: {
 		pickRegions
@@ -154,13 +154,15 @@ export default {
 
 			user_name: '测试用户',
 
-			certificate_appendix_url: '/img/test/',
-
+			IDcardFront: '',
+			
+			IDcardRever: '',
+				
 			user_identity_card_number: '',
 
 			// user_type_id: '',
 
-			delivery_region_id: 302003,
+			delivery_region_id: '',
 
 			delivery_region_name: '',
 
@@ -168,20 +170,20 @@ export default {
 
 			principal: '联系人',
 
-			phone: 12233344444,
-
-			gas_supply_agreement_attachment: '/img/test/',
-
-			deposit_image_url: '/img/test/',
+			phone: '',
+			//用户安全协议书照片(服务器路径)
+			gas_supply_agreement_attachment: '',
+			//押金单照片(服务器路径)
+			deposit_image_url: '',
 			login_username: '测试供应站',
 			contract_appendix_url: '/img/test/',
-			//身份证照（正面）
+			//身份证照（正面）(本地路径)
 			IDcardFrontUrl: require('../../static/image/cardf.png'),
-			//身份证照（反面）
+			//身份证照（反面）(本地路径)
 			IDcardReverseUrl: require('../../static/image/card.png'),
-			//用户安全协议书照片
+			//用户安全协议书照片(本地路径)
 			safeBookUrl: require('../../static/image/fujian.png'),
-			//押金单照片
+			//押金单照片(本地路径)
 			securityUrl: require('../../static/image/yajin.png')
 		};
 	},
@@ -222,7 +224,23 @@ export default {
 				success: res => {
 					this.IDcardFrontUrl = res.tempFilePaths[0];
 					console.log(this.IDcardFrontUrl);
-					console.log(Object.prototype.toString.call(this.IDcardFrontUrl));
+					if(res.tempFilePaths.length>0) {
+						let filePath = res.tempFilePaths[0]
+						uni.uploadFile({
+							url: apiAddres + uploadFile,
+							filePath: filePath,
+							name: 'file',
+							formData: {},
+							success: (res) => {
+								console.log(res)
+								res.data = JSON.parse(res.data)
+								console.log(res.data.info)
+								if(res.data.code == 200) {
+									this.IDcardFront = 'http://gasapi.tsingd.cn' + res.data.info;
+								}
+							}
+						})
+					}
 				}
 			});
 		},
@@ -233,6 +251,24 @@ export default {
 				sizeType: ['original', 'compressed'],
 				success: res => {
 					this.IDcardReverseUrl = res.tempFilePaths[0];
+					if(res.tempFilePaths.length>0) {
+						let filePath = res.tempFilePaths[0]
+						uni.uploadFile({
+							url: apiAddres + uploadFile,
+							filePath: filePath,
+							name: 'file',
+							formData: {},
+							success: (res) => {
+								console.log(res)
+								res.data = JSON.parse(res.data)
+								console.log(res.data.info)
+								if(res.data.code == 200) {
+									this.IDcardRever = 'http://gasapi.tsingd.cn' + res.data.info;
+								
+								}
+							}
+						})
+					}
 				}
 			});
 		},
@@ -242,8 +278,26 @@ export default {
 				count: 1,
 				sizeType: ['original', 'compressed'],
 				success: res => {
+					console.log(res)
 					this.safeBookUrl = res.tempFilePaths[0];
 					this.gas_supply_agreement_attachment = res.tempFilePaths[0];
+					if(res.tempFilePaths.length>0) {
+						let filePath = res.tempFilePaths[0];
+						uni.uploadFile({
+							url: apiAddres + uploadFile,
+							filePath: filePath,
+							name: 'file',
+							formData:{},
+							success: (res) => {
+								console.log(res)
+								res.data = JSON.parse(res.data)
+								console.log(res.data.info)
+								if(res.data.code == 200) {
+									this.gas_supply_agreement_attachment = 'http://gasapi.tsingd.cn' + res.data.info
+								}
+							}
+						})
+					}
 				}
 			});
 		},
@@ -255,6 +309,23 @@ export default {
 				success: res => {
 					this.securityUrl = res.tempFilePaths[0];
 					this.deposit_image_url = res.tempFilePaths[0];
+					if(res.tempFilePaths.length>0) {
+						let filePath = res.tempFilePaths[0];
+						uni.uploadFile({
+							url: apiAddres + uploadFile,
+							filePath: filePath,
+							name: 'file',
+							formData: {},
+							success: (res) => {
+								console.log(res)
+								res.data = JSON.parse(res.data)
+								console.log(res.data.info)
+								if(res.data.code == 200) {
+									this.deposit_image_url = 'http://gasapi.tsingd.cn' + res.data.info;
+								}
+							}
+						})
+					}
 				}
 			});
 		},
@@ -262,26 +333,13 @@ export default {
 		disabled(type) {
 			if (type == 'safe') {
 				this.safeBookUrl = '../../static/image/fujian.png';
+				this.gas_supply_agreement_attachment = '';
 			} else {
 				this.securityUrl = '../../static/image/yajin.png';
+				this.deposit_image_url = '';
 			}
 		},
 		toBack() {
-			/* if (this.role_type_id == 4) {
-				uni.navigateBack({
-					delta: 1
-				})
-			}
-			if (this.role_type_id == 6) {
-				uni.navigateBack({
-					delta: 1
-				})
-			}
-			if (this.role_type_id == 5) {
-				uni.navigateBack({
-					delta: 1
-				})
-			} */
 			uni.navigateBack({
 				delta: 1
 			});
@@ -317,13 +375,13 @@ export default {
 					title: '请输入证件地址',
 					duration: 1000
 				});
-			} else if (this.gas_supply_agreement_attachment === null || this.safeBookUrl === '../../static/image/fujian.png') {
+			} else if (this.safeBookUrl === '../../static/image/fujian.png' || this.safeBookUrl === require('../../static/image/fujian.png')) {
 				uni.showToast({
 					icon: 'none',
 					title: '请选择安全协议书附件',
 					duration: 1000
 				});
-			} else if (this.deposit_image_url === null || this.securityUrl === '../../static/image/yajin.png') {
+			} else if (this.securityUrl === '../../static/image/yajin.png' || this.securityUrl === require('../../static/image/yajin.png')) {
 				uni.showToast({
 					icon: 'none',
 					title: '请选择押金单附件',
@@ -360,6 +418,24 @@ export default {
 					duration: 1000
 				});
 			} else {
+				const regIdCard = /^(^[1-9]\d{7}((0\d)|(1[0-2]))(([0|1|2]\d)|3[0-1])\d{3}$)|(^[1-9]\d{5}[1-9]\d{3}((0\d)|(1[0-2]))(([0|1|2]\d)|3[0-1])((\d{4})|\d{3}[Xx])$)$/;
+				if(!regIdCard.test(this.certificate_id)) {
+					uni.showToast({
+						icon: 'none',
+						title: '请输入正确的身份证号',
+						duration: 1000
+					})
+					return
+				} 
+				const regMobile = /^(0|86|17951)?(13[0-9]|15[0123456789]|17[678]|18[0-9]|14[57])[0-9]{8}$/;
+				if (!regMobile.test(this.phone)) {
+					uni.showToast({
+						icon: 'none',
+						title: '请输入正确手机号格式',
+						duration: 1000
+					});
+					return
+				}
 				let param = {
 					// certificate_id: '410825199412303043',
 					certificate_id: this.certificate_id,
@@ -370,15 +446,15 @@ export default {
 
 					user_name: this.user_name,
 
-					certificate_appendix_url: this.certificate_appendix_url,
+					certificate_appendix_url: this.IDcardFront + ',' + this.IDcardRever,
 
 					// user_identity_card_number: 30100001050,
 					user_identity_card_number: Number(this.user_identity_card_number),
 
 					user_type_id: Number(this.current),
 
-					// delivery_region_id: Number(this.delivery_region_id),
-					delivery_region_id: 302003,
+					delivery_region_id: Number(this.delivery_region_id),
+					// delivery_region_id: 302003,
 
 					delivery_address: this.delivery_address,
 
@@ -386,9 +462,9 @@ export default {
 
 					phone: Number(this.phone),
 
-					gas_supply_agreement_attachment: '/img/test/',
+					gas_supply_agreement_attachment: this.gas_supply_agreement_attachment,
 
-					deposit_image_url: '/img/test/',
+					deposit_image_url: this.deposit_image_url,
 
 					login_username: this.login_username,
 
@@ -396,6 +472,7 @@ export default {
 
 					token: this.token
 				};
+				console.log(param)
 				uni.request({
 					url: apiAddres + addUser,
 					data: param,

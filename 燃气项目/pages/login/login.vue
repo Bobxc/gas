@@ -28,10 +28,10 @@
 				style="color: grey; font-size: 16px;"
 			/>
 			<div @click="isAnsol" v-if="flag == 'password'" class="statrc" style="display: flex; align-items: center; justify-content: center;">
-				<image src="../../static/image/close.png" style="width: 44rpx; height: 44rpx;"></image>
+				<!-- <image src="../../static/image/close.png" style="width: 44rpx; height: 44rpx;"></image> -->
 			</div>
 			<div @click="isAnsol" v-else class="statrc" style="display: flex; align-items: center; justify-content: center;">
-				<image src="../../static/image/open.png" style="width: 44rpx; height: 44rpx;"></image>
+				<!-- <image src="../../static/image/open.png" style="width: 44rpx; height: 44rpx;"></image> -->
 			</div>
 		</view>
 		<button class="register" @click="toEnter()">登录</button>

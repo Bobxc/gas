@@ -79,7 +79,7 @@
 
 <script>
 //获取手机端音频
-import { apiAddres, GetUserBynum, AppService, securityCheck, yanzhengUser } from '../../common/common.js';
+import { apiAddres, GetUserBynum, AppService, securityCheck, yanzhengUser, uploadFile } from '../../common/common.js';
 const recorderManager = uni.getRecorderManager();
 const innerAudioContext = uni.createInnerAudioContext();
 innerAudioContext.autoplay = true;
@@ -111,10 +111,14 @@ export default {
 			n: 0,
 			employee_number: 'sx201800002',
 			photo_path: null,
+			photo_path_net: [],
+			//本地录音路径
 			record_path: null,
+			//服务端录音路径
+			record_path_net: null,
 			security_check_state: 1,
 			description: '',
-			check_type: 0
+			check_type: 1
 		};
 	},
 	onLoad() {
@@ -129,8 +133,27 @@ export default {
 		});
 
 		recorderManager.onStop(function(res) {
+			console.log(res)
 			console.log('recorder stop' + JSON.stringify(res));
 			_this.record_path = res.tempFilePath;
+			if(_this.record_path != null) {
+				let filePath = res.tempFilePath
+				uni.uploadFile({
+					url: apiAddres + uploadFile,
+					filePath: filePath,
+					name: 'file',
+					formData: {},
+					success: (res) => {
+						console.log(res)
+						res.data = JSON.parse(res.data)
+						console.log(res.data.info)
+						if(res.data.code == 200) {
+							_this.record_path_net = 'http://gasapi.tsingd.cn' + res.data.info;
+							console.log(_this.record_path_net)
+						}
+					}
+				})
+			}
 		});
 	},
 	//手机物理返回键
@@ -207,7 +230,7 @@ export default {
 		takePhoto() {
 			let that = this;
 			uni.chooseImage({
-				count: 3, //默认9
+				count: 1, //默认9
 				sizeType: ['original', 'compressed'], //可以指定是原图还是压缩图，默认二者都有
 				sourceType: ['album', 'camera'], //从相册选择
 				success: res => {
@@ -216,10 +239,35 @@ export default {
 					if (res.tempFilePaths.length > 3) {
 						that.imglist = that.imglist.concat(JSON.parse(JSON.stringify(res.tempFilePaths))).slice(0, 3);
 						that.photo_path = that.imglist.join(',');
+						
+						
+						
 					} else {
 						if (that.imglist.length < 3) {
 							that.imglist = that.imglist.concat(JSON.parse(JSON.stringify(res.tempFilePaths)));
 							that.photo_path = that.imglist.join(',');
+							
+							
+							if(res.tempFilePaths.length>0) {
+								let filePath = res.tempFilePaths[0];
+								uni.uploadFile({
+									url: apiAddres + uploadFile,
+									filePath: filePath,
+									name: 'file',
+									formData: {},
+									success: (res) => {
+										console.log(res)
+										res.data = JSON.parse(res.data)
+										console.log(res.data.info)
+										if(res.data.code == 200) {
+											this.photo_path_net.push('http://gasapi.tsingd.cn' + res.data.info)
+											console.log(this.photo_path_net.join(','))
+										}
+									}
+								})
+							}
+							
+							
 						} else {
 							return;
 						}
@@ -417,8 +465,8 @@ export default {
 				let params = {
 					employee_number: this.employee_number,
 					user_identity_card_number: this.user_identity_card_number,
-					photo_path: this.photo_path,
-					record_path: this.record_path,
+					photo_path: this.photo_path_net.join(','),
+					record_path: this.record_path_net,
 					security_check_state: this.security_check_state,
 					description: this.$store.state.checkAbnormal,
 					check_type: this.check_type,

@@ -64,7 +64,7 @@ export default {
 					patRouder: '/pages/scancode/emptyenterSupply'
 				},
 				{
-					imgurl: '../../static/image/UserSingleSelect.png',
+					imgurl: '../../static/image/emptyOutSupply.png',
 					text: '空瓶出库',
 					patRouder: '/pages/scancode/emptyoutSupply'
 				}

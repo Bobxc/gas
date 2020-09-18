@@ -364,62 +364,42 @@ var render = function() {
             }
           }),
           _vm._$g(15, "i")
-            ? _c(
-                "div",
-                {
-                  staticClass: _vm._$g(15, "sc"),
-                  staticStyle: {
-                    display: "flex",
-                    "align-items": "center",
-                    "justify-content": "center"
-                  },
-                  attrs: { _i: 15 },
-                  on: {
-                    click: function($event) {
-                      return _vm.$handleViewEvent($event)
-                    }
-                  }
+            ? _c("div", {
+                staticClass: _vm._$g(15, "sc"),
+                staticStyle: {
+                  display: "flex",
+                  "align-items": "center",
+                  "justify-content": "center"
                 },
-                [
-                  _c("v-uni-image", {
-                    staticStyle: { width: "44rpx", height: "44rpx" },
-                    attrs: { src: _vm._$g(16, "a-src"), _i: 16 }
-                  })
-                ],
-                1
-              )
-            : _c(
-                "div",
-                {
-                  staticClass: _vm._$g(17, "sc"),
-                  staticStyle: {
-                    display: "flex",
-                    "align-items": "center",
-                    "justify-content": "center"
-                  },
-                  attrs: { _i: 17 },
-                  on: {
-                    click: function($event) {
-                      return _vm.$handleViewEvent($event)
-                    }
+                attrs: { _i: 15 },
+                on: {
+                  click: function($event) {
+                    return _vm.$handleViewEvent($event)
                   }
+                }
+              })
+            : _c("div", {
+                staticClass: _vm._$g(16, "sc"),
+                staticStyle: {
+                  display: "flex",
+                  "align-items": "center",
+                  "justify-content": "center"
                 },
-                [
-                  _c("v-uni-image", {
-                    staticStyle: { width: "44rpx", height: "44rpx" },
-                    attrs: { src: _vm._$g(18, "a-src"), _i: 18 }
-                  })
-                ],
-                1
-              )
+                attrs: { _i: 16 },
+                on: {
+                  click: function($event) {
+                    return _vm.$handleViewEvent($event)
+                  }
+                }
+              })
         ],
         1
       ),
       _c(
         "v-uni-button",
         {
-          staticClass: _vm._$g(19, "sc"),
-          attrs: { _i: 19 },
+          staticClass: _vm._$g(17, "sc"),
+          attrs: { _i: 17 },
           on: {
             click: function($event) {
               return _vm.$handleViewEvent($event)
@@ -430,10 +410,10 @@ var render = function() {
       ),
       _c(
         "v-uni-view",
-        { staticClass: _vm._$g(20, "sc"), attrs: { _i: 20 } },
+        { staticClass: _vm._$g(18, "sc"), attrs: { _i: 18 } },
         [
           _c("v-uni-image", {
-            attrs: { src: _vm._$g(21, "a-src"), mode: "", _i: 21 }
+            attrs: { src: _vm._$g(19, "a-src"), mode: "", _i: 19 }
           })
         ],
         1
@@ -6098,7 +6078,7 @@ var ___CSS_LOADER_URL_IMPORT_0___ = __webpack_require__(/*! ../../static/image/b
 exports = ___CSS_LOADER_API_IMPORT___(false);
 var ___CSS_LOADER_URL_REPLACEMENT_0___ = ___CSS_LOADER_GET_URL_IMPORT___(___CSS_LOADER_URL_IMPORT_0___);
 // Module
-exports.push([module.i, ".commond {\n  height: 100vh;\n  width: 750rpx;\n  overflow: hidden;\n  box-sizing: border-box;\n  background-color: #f8f8ff;\n}\n.top_information {\n  top: 0;\n  left: 0;\n  right: 0;\n  bottom: 326rpx;\n  background-image: url(" + ___CSS_LOADER_URL_REPLACEMENT_0___ + ");\n  height: 400rpx;\n  width: 750rpx;\n  box-sizing: border-box;\n}\n.top_information .addUser-button {\n  height: 240rpx;\n  display: -webkit-box;\n  display: -webkit-flex;\n  display: flex;\n  -webkit-box-pack: center;\n  -webkit-justify-content: center;\n          justify-content: center;\n  -webkit-box-align: center;\n  -webkit-align-items: center;\n          align-items: center;\n}\n.top_information .addUser-button .icon {\n  height: 80rpx;\n  width: 80rpx;\n  background-color: #064ed1;\n  border-radius: 30rpx;\n  margin-left: 24rpx;\n  box-sizing: border-box;\n  line-height: 30rpx;\n}\n.top_information .addUser-button .icon span {\n  font-size: 75rpx;\n  color: #fffdef;\n}\n.top_information .addUser-button .icon span uni-image {\n  height: 80rpx;\n  line-height: 80rpx;\n  width: 80rpx;\n}\n.top_information .addUser-button .navs {\n  -webkit-box-flex: 1;\n  -webkit-flex: 1;\n          flex: 1;\n  width: 100vw;\n  text-indent: 4.8em;\n  width: 164rpx;\n  height: 56rpx;\n  font-size: 38rpx;\n  font-family: PingFang SC;\n  font-weight: 700;\n  line-height: 56rpx;\n  color: #ffffff;\n  letter-spacing: 6rpx;\n  opacity: 1;\n}\n.top_information .flex-button {\n  width: 100%;\n  bottom: -10rpx;\n  left: 0;\n  right: 0;\n}\n.top_information .flex-button .button-one {\n  color: #0045ff;\n  padding: 10rpx;\n}\n.top_information .flex-button .button-two {\n  margin-left: 24rpx;\n  width: 210rpx;\n  line-height: 76rpx;\n  font-size: 35rpx;\n  border-radius: 20rpx 20rpx 0 0;\n  background-color: #fff;\n  box-sizing: border-box;\n  border: 1px solid #fff;\n  display: inline-block;\n  text-align: center;\n  font-family: PingFang SC;\n  box-shadow: 0 2rpx 3rpx #fff;\n}\n.top_information .flex-button .button-two:nth-child(2) {\n  margin-left: 5rpx;\n}\n.bottom_information {\n  width: 750rpx;\n  box-sizing: border-box;\n  overflow: scroll;\n  padding: 0rpx 24rpx 24rpx 24rpx;\n  margin-top: -80rpx;\n}\n.bottom_information .content {\n  height: 76vh;\n  box-shadow: 0rpx 5rpx 10rpx rgba(0, 64, 128, 0.04);\n  opacity: 1;\n  border-radius: 0rpx 0rpx 16rpx 16rpx;\n  overflow: scroll;\n  background: #ffffff;\n  padding: 20rpx;\n}\n.bottom_information .cardlist {\n  height: 280rpx;\n  background-color: #e8eeff;\n  opacity: 1;\n  border-radius: 10rpx;\n  margin-bottom: 24rpx;\n  display: -webkit-box;\n  display: -webkit-flex;\n  display: flex;\n  -webkit-box-pack: justify;\n  -webkit-justify-content: space-between;\n          justify-content: space-between;\n  -webkit-flex-wrap: wrap;\n          flex-wrap: wrap;\n  position: relative;\n}\n.bottom_information .cardlist .statreWrap .statre {\n  width: 175rpx;\n  height: 60rpx;\n  opacity: 1;\n  border-radius: 10rpx;\n  position: absolute;\n  top: 24rpx;\n  right: 24rpx;\n  font-size: 28rpx;\n  text-align: center;\n  font-family: PingFang SC;\n  line-height: 60rpx;\n  color: #0045ffff;\n}\n.bottom_information .cardlist .statreWrap uni-button {\n  width: 175rpx;\n  height: 60rpx;\n  background: #ffffff;\n  border: 1px solid #0045ff;\n  opacity: 1;\n  border-radius: 10rpx;\n  position: absolute;\n  top: 24rpx;\n  right: 24rpx;\n  font-size: 28rpx;\n  text-align: center;\n  font-family: PingFang SC;\n  line-height: 60rpx;\n  color: #0045ff;\n}\n.bottom_information .cardlist li {\n  width: 100%;\n  height: 30rpx;\n  font-size: 24rpx;\n  font-family: PingFang SC;\n  font-weight: 400;\n  line-height: 30rpx;\n  color: #000000;\n  opacity: 1;\n  padding-left: 24rpx;\n}\n.bottom_information .cardlist uni-button {\n  width: 175rpx;\n  height: 60rpx;\n  background: #ffffff;\n  border: 1px solid #0045ff;\n  opacity: 1;\n  border-radius: 10rpx;\n  position: absolute;\n  top: 24rpx;\n  right: 24rpx;\n  font-size: 28rpx;\n  text-align: center;\n  font-family: PingFang SC;\n  line-height: 60rpx;\n  color: #0045ff;\n}\n.bottom_information .bottom_informations {\n  height: 80vh;\n  width: 100%;\n  box-sizing: border-box;\n  overflow: hidden;\n  margin-top: -80rpx;\n}\n.bottom_information .bottom_informations .contents {\n  height: 1268rpx;\n  box-shadow: 0rpx 5rpx 10rpx rgba(0, 64, 128, 0.04);\n  border-radius: 0rpx 0rpx 16rpx 16rpx;\n  background: #ffffff;\n  padding: 20rpx;\n}\n.bottom_information .bottom_informations .contents span {\n  height: 246.62rpx;\n  width: 281.28rpx;\n  display: block;\n  margin: 276rpx 140rpx 0 160rpx;\n  box-sizing: border-box;\n}\n.bottom_information .bottom_informations .contents span uni-image {\n  height: 246.62rpx;\n  width: 281.28rpx;\n}\n.bottom_information .bottom_informations .contents p {\n  width: 131rpx;\n  height: 45rpx;\n  font-size: 32rpx;\n  font-family: PingFang SC;\n  font-weight: 400;\n  line-height: 45rpx;\n  color: #666666;\n  margin: 30rpx 140rpx 0 220rpx;\n  opacity: 1;\n  text-align: center;\n}\n", ""]);
+exports.push([module.i, ".commond {\n  height: 100vh;\n  width: 750rpx;\n  overflow: hidden;\n  box-sizing: border-box;\n  background-color: #f8f8ff;\n}\n.top_information {\n  top: 0;\n  left: 0;\n  right: 0;\n  bottom: 326rpx;\n  background-image: url(" + ___CSS_LOADER_URL_REPLACEMENT_0___ + ");\n  height: 400rpx;\n  width: 750rpx;\n  box-sizing: border-box;\n}\n.top_information .addUser-button {\n  height: 240rpx;\n  display: -webkit-box;\n  display: -webkit-flex;\n  display: flex;\n  -webkit-box-pack: center;\n  -webkit-justify-content: center;\n          justify-content: center;\n  -webkit-box-align: center;\n  -webkit-align-items: center;\n          align-items: center;\n}\n.top_information .addUser-button .icon {\n  height: 80rpx;\n  width: 80rpx;\n  background-color: #064ed1;\n  border-radius: 30rpx;\n  margin-left: 24rpx;\n  box-sizing: border-box;\n  line-height: 30rpx;\n}\n.top_information .addUser-button .icon span {\n  font-size: 75rpx;\n  color: #fffdef;\n}\n.top_information .addUser-button .icon span uni-image {\n  height: 80rpx;\n  line-height: 80rpx;\n  width: 80rpx;\n}\n.top_information .addUser-button .navs {\n  -webkit-box-flex: 1;\n  -webkit-flex: 1;\n          flex: 1;\n  width: 100vw;\n  text-indent: 4.8em;\n  width: 164rpx;\n  height: 56rpx;\n  font-size: 38rpx;\n  font-family: PingFang SC;\n  font-weight: 700;\n  line-height: 56rpx;\n  color: #ffffff;\n  letter-spacing: 6rpx;\n  opacity: 1;\n}\n.top_information .flex-button {\n  width: 100%;\n  bottom: -10rpx;\n  left: 0;\n  right: 0;\n}\n.top_information .flex-button .button-one {\n  color: #0045ff;\n  padding: 10rpx;\n}\n.top_information .flex-button .button-two {\n  margin-left: 24rpx;\n  width: 250rpx;\n  line-height: 76rpx;\n  font-size: 35rpx;\n  border-radius: 20rpx 20rpx 0 0;\n  background-color: #fff;\n  box-sizing: border-box;\n  border: 1px solid #fff;\n  display: inline-block;\n  text-align: center;\n  font-family: PingFang SC;\n  box-shadow: 0 2rpx 3rpx #fff;\n}\n.top_information .flex-button .button-two:nth-child(2) {\n  margin-left: 5rpx;\n}\n.bottom_information {\n  width: 750rpx;\n  box-sizing: border-box;\n  overflow: scroll;\n  padding: 0rpx 24rpx 24rpx 24rpx;\n  margin-top: -80rpx;\n}\n.bottom_information .content {\n  height: 76vh;\n  box-shadow: 0rpx 5rpx 10rpx rgba(0, 64, 128, 0.04);\n  opacity: 1;\n  border-radius: 0rpx 0rpx 16rpx 16rpx;\n  overflow: scroll;\n  background: #ffffff;\n  padding: 20rpx;\n}\n.bottom_information .cardlist {\n  height: 280rpx;\n  background-color: #e8eeff;\n  opacity: 1;\n  border-radius: 10rpx;\n  margin-bottom: 24rpx;\n  display: -webkit-box;\n  display: -webkit-flex;\n  display: flex;\n  -webkit-box-pack: justify;\n  -webkit-justify-content: space-between;\n          justify-content: space-between;\n  -webkit-flex-wrap: wrap;\n          flex-wrap: wrap;\n  position: relative;\n}\n.bottom_information .cardlist .statreWrap .statre {\n  width: 175rpx;\n  height: 60rpx;\n  opacity: 1;\n  border-radius: 10rpx;\n  position: absolute;\n  top: 24rpx;\n  right: 24rpx;\n  font-size: 28rpx;\n  text-align: center;\n  font-family: PingFang SC;\n  line-height: 60rpx;\n  color: #0045ffff;\n}\n.bottom_information .cardlist .statreWrap uni-button {\n  width: 175rpx;\n  height: 60rpx;\n  background: #ffffff;\n  border: 1px solid #0045ff;\n  opacity: 1;\n  border-radius: 10rpx;\n  position: absolute;\n  top: 24rpx;\n  right: 24rpx;\n  font-size: 28rpx;\n  text-align: center;\n  font-family: PingFang SC;\n  line-height: 60rpx;\n  color: #0045ff;\n}\n.bottom_information .cardlist li {\n  width: 100%;\n  height: 30rpx;\n  font-size: 24rpx;\n  font-family: PingFang SC;\n  font-weight: 400;\n  line-height: 30rpx;\n  color: #000000;\n  opacity: 1;\n  padding-left: 24rpx;\n}\n.bottom_information .cardlist uni-button {\n  width: 175rpx;\n  height: 60rpx;\n  background: #ffffff;\n  border: 1px solid #0045ff;\n  opacity: 1;\n  border-radius: 10rpx;\n  position: absolute;\n  top: 24rpx;\n  right: 24rpx;\n  font-size: 28rpx;\n  text-align: center;\n  font-family: PingFang SC;\n  line-height: 60rpx;\n  color: #0045ff;\n}\n.bottom_information .bottom_informations {\n  height: 80vh;\n  width: 100%;\n  box-sizing: border-box;\n  overflow: hidden;\n  margin-top: -80rpx;\n}\n.bottom_information .bottom_informations .contents {\n  height: 1268rpx;\n  box-shadow: 0rpx 5rpx 10rpx rgba(0, 64, 128, 0.04);\n  border-radius: 0rpx 0rpx 16rpx 16rpx;\n  background: #ffffff;\n  padding: 20rpx;\n}\n.bottom_information .bottom_informations .contents span {\n  height: 246.62rpx;\n  width: 281.28rpx;\n  display: block;\n  margin: 276rpx 140rpx 0 160rpx;\n  box-sizing: border-box;\n}\n.bottom_information .bottom_informations .contents span uni-image {\n  height: 246.62rpx;\n  width: 281.28rpx;\n}\n.bottom_information .bottom_informations .contents p {\n  width: 131rpx;\n  height: 45rpx;\n  font-size: 32rpx;\n  font-family: PingFang SC;\n  font-weight: 400;\n  line-height: 45rpx;\n  color: #666666;\n  margin: 30rpx 140rpx 0 220rpx;\n  opacity: 1;\n  text-align: center;\n}\n", ""]);
 // Exports
 module.exports = exports;
 

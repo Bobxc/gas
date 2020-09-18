@@ -26,5 +26,6 @@ module.exports={
 	securityCheck:'/AppService/SecurityCheck',//日常安检
 	gasType: '/AppService/GetGcType',//获取气瓶类型
 	userInfo: '/AppService/GetUserInfo',//获取登录用户信息
+	uploadFile: '/UntilApi/PostFiles', //上传文件
 }
 
