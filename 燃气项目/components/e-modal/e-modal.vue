@@ -1,5 +1,6 @@
 <template>
-	<view @touchmove.stop.prevent>
+	<!-- <view @touchmove.stop.prevent> -->
+	<view>
 		<view  @click.self.stop="cancel" class="e-modal" :class="[visible?'e-modal_show':'e-modal_hidden',animation?'e-modal-action_animation':'']">
 			<view class="e-modal-container" :style="{width}" @click.stop.prevent>
 				<slot></slot>

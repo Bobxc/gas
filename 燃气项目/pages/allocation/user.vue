@@ -29,7 +29,7 @@
 								<!-- <p>已扫码<span style="color: #0045ff;">{{ this.addnumber }}</span></p> -->
 								<p>
 									已扫码
-									<span style="color: #0045ff; position: absolute; right: 30rpx;" >{{ this.$store.state.emptyNum }}</span>
+									<span style="color: #0045ff; position: absolute; right: 30rpx;">{{ this.$store.state.emptyNum }}</span>
 								</p>
 							</view>
 						</view>
@@ -82,7 +82,7 @@
 								</li>
 								<span>客户卡编号</span>
 								<li class="message">
-									<input v-model="keyNumber" type="text" @blur="leave"/>
+									<input v-model="keyNumber" type="text" @blur="leave" />
 									<span><image src="../../static/image/PositionFocusSaoma.png"></image></span>
 								</li>
 							</ul>
@@ -121,23 +121,126 @@
 				</view>
 			</view>
 		</view>
-		<e-modal class="eModal" :visible.sync="visible">
+		<e-modal class="eModal" :visible.sync="visible" style="width: 750rpx; height: 80%;">
 			<span><image style="width: 150rpx; height: 150rpx;" src="../../static/image/ZU539.png"></image></span>
 			<p>还未验证用户信息</p>
 			<button @click="closeEmodeal">关闭</button>
 		</e-modal>
+		<!-- 身份证号/联系方式验证用户 -->
+		<view >
+			<e-modal class="userListModal" :visible.sync="verificateUser" width="90%" height="100%">
+				<view class="userList" style="height: 80vh; padding: 20rpx; overflow: auto;">
+					<view class="userTitle"><span>身份识别</span></view>
+					<view class="userContent">
+						<ul style="position: relative;" v-for="(item, index) in userInfoList" :key="index">
+							<evan-radio-group v-model="checkedUserInfo" @change="chooseUserInfo">
+								<evan-radio :label="index">
+									<li>
+										<span class="spanLeft">用户类型：</span>
+										<span class="spanRight">{{ item.usertype }}</span>
+									</li>
+									<li>
+										<span class="spanLeft">用户名称：</span>
+										<span class="spanRight">{{ item.user_name }}</span>
+									</li>
+									<li>
+										<span class="spanLeft">证件编号：</span>
+										<span class="spanRight">{{ item.user_identity_card_number }}</span>
+									</li>
+									<li>
+										<span class="spanLeft">联系人：</span>
+										<span class="spanRight">{{ item.principal }}</span>
+									</li>
+									<li>
+										<span class="spanLeft">联系电话：</span>
+										<span class="spanRight">{{ item.phone }}</span>
+									</li>
+									<li>
+										<span class="spanLeft">配送地址：</span>
+										<span class="spanRight">{{ item.delivery_address }}</span>
+									</li>
+									<template slot="icon">
+										<uni-icons
+											type="circle-filled"
+											size="16"
+											color="#108ee9"
+											v-if="checkedUserInfo == index"
+											style="position: absolute; top: 28rpx; right: 20rpx;"
+										></uni-icons>
+										<uni-icons type="circle" size="16" color="#108ee9" v-else style="position: absolute; top: 28rpx; right: 20rpx;"></uni-icons>
+									</template>
+								</evan-radio>
+							</evan-radio-group>
+						</ul>
+					</view>
+					<button class="userBtn" type="default" @click="userBtn">确定</button>
+				</view>
+			</e-modal>
+		</view>
+		<!-- 客户卡编号验证用户 -->
+		<e-modal class="userListModal" :visible.sync="verificateUserByCardNum" width="90%">
+			<view class="userList" style="height: 80vh; padding: 20rpx;">
+				<view class="userTitle"><span>身份识别</span></view>
+				<view class="userContent">
+					<ul style="position: relative;" v-for="(item, index) in userInfoList" :key="index">
+						<evan-radio-group v-model="checkedUserInfo" @change="chooseUserInfo">
+							<evan-radio :label="index">
+								<li>
+									<span class="spanLeft">用户类型：</span>
+									<span class="spanRight">{{ item.user_type_name }}</span>
+								</li>
+								<li>
+									<span class="spanLeft">用户名称：</span>
+									<span class="spanRight">{{ item.user_name }}</span>
+								</li>
+								<li>
+									<span class="spanLeft">证件编号：</span>
+									<span class="spanRight">{{ item.user_identity_card_number }}</span>
+								</li>
+								<li>
+									<span class="spanLeft">联系人：</span>
+									<span class="spanRight">{{ item.principal }}</span>
+								</li>
+								<li>
+									<span class="spanLeft">联系电话：</span>
+									<span class="spanRight">{{ item.phone }}</span>
+								</li>
+								<li>
+									<span class="spanLeft">配送地址：</span>
+									<span class="spanRight">{{ item.address }}</span>
+								</li>
+								<template slot="icon">
+									<uni-icons
+										type="circle-filled"
+										size="16"
+										color="#108ee9"
+										v-if="checkedUserInfo == index"
+										style="position: absolute; top: 28rpx; right: 20rpx;"
+									></uni-icons>
+									<uni-icons type="circle" size="16" color="#108ee9" v-else style="position: absolute; top: 28rpx; right: 20rpx;"></uni-icons>
+								</template>
+							</evan-radio>
+						</evan-radio-group>
+					</ul>
+				</view>
+				<button class="userBtn" type="default" @click="userBtnByCard">确定</button>
+			</view>
+		</e-modal>
+		<LotusLoading :lotusLoadingData="lotusLoadingData"></LotusLoading>
 	</view>
 </template>
 
 <script>
 import { apiAddres, cert, testZt, gtestZt, Dispatcher, zDispatcher, qDispatcher, GetUserBynum, AppService, yanzhengUser } from '../../common/common.js';
 import Modal from '../../components/x-modal/x-modal';
+import LotusLoading from '../../components/Winglau14-lotusLoading/Winglau14-LotusLoading.vue';
 export default {
-	components: { Modal },
+	components: { Modal, LotusLoading},
 	data() {
 		return {
 			iconValue: 0,
 			current: 0,
+			checkedUserInfo: 0,
 			remark: '',
 			addnumber: 0,
 			addnumbers: '',
@@ -147,8 +250,45 @@ export default {
 			keyNumber: '',
 			cut: 0,
 			flag: true,
+			lotusLoadingData: {
+				isShow: false //设置显示加载中组件true显示false隐藏
+			},
 			buttonList: [{ className: 'button-one', text: '用户验证' }, { className: 'button-one', text: '气瓶分配' }],
 			list: [{ text: '身份证', value: '0' }, { text: '联系方式', value: '1' }],
+			userInfoList: [
+				/* {
+					user_name: '王慧',
+					usertype: '个体',
+					phone: 13333333333,
+					user_identity_card_number: 12344566,
+					delivery_address: '浙江省温州市鹿城区XX街道XX社区XX单元XX室',
+					principal: '王慧' 
+				},
+				{
+					user_name: '王慧',
+					usertype: '个体',
+					phone: 13333333333,
+					user_identity_card_number: 12344566,
+					delivery_address: '浙江省温州市鹿城区XX街道XX社区XX单元XX室',
+					principal: '王慧' 
+				},
+				{
+					user_name: '王慧',
+					usertype: '个体',
+					phone: 13333333333,
+					user_identity_card_number: 12344566,
+					delivery_address: '浙江省温州市鹿城区XX街道XX社区XX单元XX室',
+					principal: '王慧' 
+				},
+				{
+					user_name: '王慧',
+					usertype: '个体',
+					phone: 13333333333,
+					user_identity_card_number: 12344566,
+					delivery_address: '浙江省温州市鹿城区XX街道XX社区XX单元XX室',
+					principal: '王慧' 
+				} */
+			],
 			arr: [],
 			token: '',
 			loginMark: '',
@@ -171,7 +311,9 @@ export default {
 			visible: false,
 			//背景模糊
 			blurry: false,
-			isVerification: ''
+			isVerification: '',
+			verificateUser: false,
+			verificateUserByCardNum: false
 		};
 	},
 	onLoad() {
@@ -214,7 +356,62 @@ export default {
 			this.current = evt;
 			console.log(this.current);
 		},
-
+		//选择弹出层用户信息
+		chooseUserInfo(index) {
+			this.checkedUserInfo = index;
+			this.user_name = this.userInfoList[index].user_name;
+			this.usertype = this.userInfoList[index].usertype;
+			this.principal = this.userInfoList[index].principal;
+			this.phone = this.userInfoList[index].phone;
+			this.keyNumber = this.userInfoList[index].user_identity_card_number;
+			this.delivery_address = this.userInfoList[index].delivery_address;
+		},
+		//选择弹出层确认按钮
+		userBtn() {
+			this.verificateUser = false;
+			uni.request({
+				url: apiAddres + yanzhengUser,
+				header: {},
+				method: 'GET',
+				data: {
+					token: this.token,
+					user_identity_card_number: this.keyNumber
+				},
+				success: res => {
+					console.log(res);
+					if (res.data.code == 200) {
+						uni.showToast({
+							icon: 'none',
+							title: '验证成功',
+							duration: 2000
+						});
+						this.user_number = res.data.data[0].user_number;
+						uni.setStorage({
+							key: 'isVerification',
+							data: 'verification',
+							success() {
+								console.log('isVerification: verification');
+							}
+						});
+					} else {
+						uni.showToast({
+							icon: 'none',
+							title: '验证失败',
+							duration: 2000
+						});
+					}
+				}
+			});
+		},
+		//通过客户卡编号验证确定按钮
+		userBtnByCard() {
+			this.verificateUserByCardNum = false;
+			uni.showToast({
+				icon: 'none',
+				title: '验证成功',
+				duration: 1000
+			});
+		},
 		//弹框提示
 		cancel(e) {
 			console.log(e);
@@ -239,7 +436,7 @@ export default {
 		},
 		//自提完成分配,气瓶分配
 		finshedf() {
-			if(this.role_type_id == 6) {
+			if (this.role_type_id == 6) {
 				console.log('user_number', this.user_number);
 				const value = uni.getStorageSync('isVerification');
 				this.isVerification = value;
@@ -248,7 +445,7 @@ export default {
 					this.blurry = true;
 					return;
 				}
-				
+
 				if (this.$store.state.dispatcher.gcEmptys == undefined || this.$store.state.dispatcher.gcEmptys == '') {
 					uni.showToast({
 						icon: 'none',
@@ -264,10 +461,10 @@ export default {
 				} else {
 					this.$store.state.dispatcher.userNumber = this.user_number;
 					this.$store.state.dispatcher.remark = this.remark;
-				
+
 					let data = this.$store.state.dispatcher;
 					console.log('data=', data);
-				
+
 					uni.request({
 						url: apiAddres + qDispatcher,
 						method: 'POST',
@@ -332,8 +529,8 @@ export default {
 				}
 			}
 			//供应站发起自提
-			if(this.role_type_id == 5) {
-				console.log('role_type_id===5')
+			if (this.role_type_id == 5) {
+				console.log('role_type_id===5');
 				console.log('user_number', this.user_number);
 				const value = uni.getStorageSync('isVerification');
 				this.isVerification = value;
@@ -342,7 +539,7 @@ export default {
 					this.blurry = true;
 					return;
 				}
-				
+
 				if (this.$store.state.dispatcher.gcEmptys == undefined || this.$store.state.dispatcher.gcEmptys == '') {
 					uni.showToast({
 						icon: 'none',
@@ -358,10 +555,10 @@ export default {
 				} else {
 					this.$store.state.dispatcher.userNumber = this.user_number;
 					this.$store.state.dispatcher.remark = this.remark;
-				
+
 					let data = this.$store.state.dispatcher;
 					console.log('data=', data);
-				
+
 					uni.request({
 						url: apiAddres + gtestZt,
 						method: 'POST',
@@ -426,8 +623,8 @@ export default {
 				}
 			}
 			//充气站发起自提
-			if(this.role_type_id == 7) {
-				console.log('role_type_id===7')
+			if (this.role_type_id == 7) {
+				console.log('role_type_id===7');
 				console.log('user_number', this.user_number);
 				const value = uni.getStorageSync('isVerification');
 				this.isVerification = value;
@@ -436,7 +633,7 @@ export default {
 					this.blurry = true;
 					return;
 				}
-				
+
 				if (this.$store.state.dispatcher.gcEmptys == undefined || this.$store.state.dispatcher.gcEmptys == '') {
 					uni.showToast({
 						icon: 'none',
@@ -452,10 +649,10 @@ export default {
 				} else {
 					this.$store.state.dispatcher.userNumber = this.user_number;
 					this.$store.state.dispatcher.remark = this.remark;
-				
+
 					let data = this.$store.state.dispatcher;
 					console.log('data=', data);
-				
+
 					uni.request({
 						url: apiAddres + testZt,
 						method: 'POST',
@@ -523,6 +720,13 @@ export default {
 		//身份证验证 （联系方式验证） //这里需要正则表达式来判断电话号码和编号 （后期补上）
 		move() {
 			if (this.keyWord != '') {
+				this.user_name = '';
+				this.usertype = '';
+				this.principal = '';
+				this.phone = '';
+				this.keyNumber = '';
+				this.delivery_address = '';
+				this.userInfoList = [];
 				if (this.current == 0) {
 					const regIdCard = /^(^[1-9]\d{7}((0\d)|(1[0-2]))(([0|1|2]\d)|3[0-1])\d{3}$)|(^[1-9]\d{5}[1-9]\d{3}((0\d)|(1[0-2]))(([0|1|2]\d)|3[0-1])((\d{4})|\d{3}[Xx])$)$/;
 					if (!regIdCard.test(this.keyWord)) {
@@ -532,6 +736,8 @@ export default {
 							duration: 1000
 						});
 					} else {
+						this.verificateUser = true;
+						this.lotusLoadingData.isShow = true;
 						uni.request({
 							url: apiAddres + GetUserBynum,
 							header: {},
@@ -539,72 +745,43 @@ export default {
 							data: {
 								token: this.token,
 								certificate_id: this.keyWord,
-								user_identity_card_number: this.keyNumber
+								user_identity_card_number: this.user_identity_card_number
 							},
 							success: res => {
+								console.log(res);
+								this.lotusLoadingData.isShow = false;
 								if (res.data.code == 200) {
-									console.log(res);
-									this.user_name = res.data.data[0].user_name;
-									this.usertype = res.data.data[0].usertype;
-									this.principal = res.data.data[0].principal;
-									this.phone = res.data.data[0].phone;
-									this.delivery_address = res.data.data[0].delivery_address;
-									this.keyNumber = res.data.data[1].user_identity_card_number;
-									
-									if(this.keyNumber == '') {
-										uni.showToast({
-											icon:'none',
-											title:'验证失败',
-											duration:2000
-										})
+									if (res.data.data.length > 0) {
+										this.userInfoList = res.data.data;
+										this.checkedUserInfo = 0;
+										this.user_name = this.userInfoList[0].user_name;
+										this.usertype = this.userInfoList[0].usertype;
+										this.principal = this.userInfoList[0].principal;
+										this.phone = this.userInfoList[0].phone;
+										this.keyNumber = this.userInfoList[0].user_identity_card_number;
+										this.delivery_address = this.userInfoList[0].delivery_address;
 									} else {
-										uni.request({
-											url: apiAddres + yanzhengUser,
-											header:{},
-											method:'GET',
-											data:{
-												token:this.token,
-												user_identity_card_number: this.keyNumber
-											},
-											success: (res) => {
-												console.log(res)
-												if(res.data.code == 200) {
-													uni.showToast({
-														icon: 'none',
-														title: '验证成功',
-														duration: 2000
-													})
-													this.user_number = res.data.data[0].user_number
-													uni.setStorage({
-														key: 'isVerification',
-														data: 'verification',
-														success() {
-															console.log('isVerification: verification')
-														}
-													})
-												} else {
-													uni.showToast({
-														icon: 'none',
-														title: '验证失败',
-														duration: 2000
-													})
-												}
-											}
-										})
+										this.verificateUser = false;
+										uni.showToast({
+											icon: 'none',
+											title: '无此用户',
+											duration: 1000
+										});
+										return;
 									}
-								}
-								if (res.data.code == 400) {
-									uni.showToast({
-										icon: 'none',
-										title: '参数有误,请重新输入',
-										duration: 2000
-									});
 								}
 							}
 						});
 					}
 				}
 				if (this.current == 1) {
+					this.user_name = '';
+					this.usertype = '';
+					this.principal = '';
+					this.phone = '';
+					this.keyNumber = '';
+					this.delivery_address = '';
+					this.userInfoList = [];
 					const regMobile = /^(0|86|17951)?(13[0-9]|15[0123456789]|17[678]|18[0-9]|14[57])[0-9]{8}$/;
 					if (!regMobile.test(this.keyWord)) {
 						uni.showToast({
@@ -613,6 +790,8 @@ export default {
 							duration: 1000
 						});
 					} else {
+						this.verificateUser = true;
+						this.lotusLoadingData.isShow = true;
 						uni.request({
 							url: apiAddres + AppService,
 							header: {},
@@ -620,85 +799,103 @@ export default {
 							data: {
 								token: this.token,
 								phone: this.keyWord,
-								user_identity_card_number: this.keyNumber
+								user_identity_card_number: this.user_identity_card_number
 							},
 							success: res => {
+								console.log(res);
+								this.lotusLoadingData.isShow = false;
 								if (res.data.code == 200) {
-									console.log(res);
-									this.user_name = res.data.data[0].user_name;
-									this.usertype = res.data.data[0].usertype;
-									this.principal = res.data.data[0].principal;
-									this.phone = res.data.data[0].phone;
-									this.keyNumber = res.data.data[0].user_identity_card_number;
-									this.delivery_address = res.data.data[0].delivery_address;
-									
-									if(this.keyNumber == '') {
-										uni.showToast({
-											icon:'none',
-											title:'验证失败',
-											duration:2000
-										})
+									if (res.data.data.length > 0) {
+										this.userInfoList = res.data.data;
+										this.checkedUserInfo = 0;
+										this.user_name = this.userInfoList[0].user_name;
+										this.usertype = this.userInfoList[0].usertype;
+										this.principal = this.userInfoList[0].principal;
+										this.phone = this.userInfoList[0].phone;
+										this.keyNumber = this.userInfoList[0].user_identity_card_number;
+										this.delivery_address = this.userInfoList[0].delivery_address;
 									} else {
-										uni.request({
-											url: apiAddres + yanzhengUser,
-											header:{},
-											method:'GET',
-											data:{
-												token:this.token,
-												user_identity_card_number: this.keyNumber
-											},
-											success: (res) => {
-												console.log(res)
-												if(res.data.code == 200) {
-													uni.showToast({
-														icon: 'none',
-														title: '验证成功',
-														duration: 2000
-													})
-													this.user_number = res.data.data[0].user_number
-													uni.setStorage({
-														key: 'isVerification',
-														data: 'verification',
-														success() {
-															console.log('isVerification: verification')
-														}
-													})
-												} else {
-													uni.showToast({
-														icon: 'none',
-														title: '验证失败',
-														duration: 2000
-													})
-												}
-											}
-										})
+										this.verificateUser = false;
+										uni.showToast({
+											icon: 'none',
+											title: '无此用户',
+											duration: 1000
+										});
+										return;
 									}
-								}
-								if (res.data.code == 400) {
-									uni.showToast({
-										icon: 'none',
-										title: '参数有误，请重新填写',
-										duration: 2000
-									});
 								}
 							}
 						});
 					}
 				}
 			} else {
-				// if(this.keyNumber==''){
-				// 	uni.showToast({
-				// 		icon :'none',
-				// 		title: '请输入客户卡编号',
-				// 		duration:1000
-				// 	})
-				// }
 			}
-			console.log(this.user_number)
 		},
 		//输入客户卡编号验证用户
 		leave() {
-			uni.request({
+			if(this.keyNumber != '') {
+				this.user_type_name = '';
+				this.usertype = '';
+				this.principal = '';
+				this.phone = '';
+				this.address = '';
+				this.userInfoList = [];
+				
+					this.verificateUserByCardNum = true;
+					this.lotusLoadingData.isShow = true;
+					uni.request({
+						url: apiAddres + yanzhengUser,
+						header: {},
+						method: 'GET',
+						data: {
+							token: this.token,
+							user_identity_card_number: this.keyNumber
+						},
+						success: res => {
+							console.log(res);
+							this.lotusLoadingData.isShow = false;
+							if (res.data.code == 200) {
+								if (res.data.data.length > 0) {
+									this.userInfoList = res.data.data;
+									this.checkedUserInfo = 0;
+									if(this.current == 0) {
+										this.keyWord = this.userInfoList[0].certificate_id;
+									}
+									if (this.current == 1) {
+										this.keyWord = this.userInfoList[0].phone;
+									}
+									this.user_name = this.userInfoList[0].user_name;
+									this.usertype = this.userInfoList[0].user_type_name;
+									this.principal = this.userInfoList[0].principal;
+									this.keyNumber = this.userInfoList[0].user_identity_card_number;
+									this.delivery_address = this.userInfoList[0].address;
+									uni.setStorage({
+										key: 'isVerification',
+										data: 'verification',
+										success() {
+											console.log('isVerification: verification');
+										}
+									});
+								} else {
+									this.keyWord = '';
+									this.user_name = '';
+									this.usertype = '';
+									this.principal = '';
+									this.delivery_address = '';
+									this.verificateUserByCardNum = false;
+									uni.showToast({
+										icon: 'none',
+										title: '无此用户',
+										duration: 1000
+									});
+									return;
+								}
+							}
+						}
+					});
+			}
+			
+			/* uni.request({
 				url: apiAddres + yanzhengUser,
 				header: {},
 				method: 'GET',
@@ -706,41 +903,40 @@ export default {
 					token: this.token,
 					user_identity_card_number: this.keyNumber
 				},
-				success: (res) => {
-					console.log(res)
-					if(res.data.code == 200) {
-						if(this.current == 0) {
-							this.keyWord = res.data.data[0].certificate_id
+				success: res => {
+					console.log(res);
+					if (res.data.code == 200) {
+						if (this.current == 0) {
+							this.keyWord = res.data.data[0].certificate_id;
 						}
-						if(this.current == 1) {
-							this.keyWord = res.data.data[0].phone
+						if (this.current == 1) {
+							this.keyWord = res.data.data[0].phone;
 						}
-						this.usertype = res.data.data[0].user_type_name
-						this.user_name = res.data.data[0].user_name
-						this.phone = res.data.data[0].phone
-						this.delivery_address = res.data.data[0].address
+						this.usertype = res.data.data[0].user_type_name;
+						this.user_name = res.data.data[0].user_name;
+						this.phone = res.data.data[0].phone;
+						this.delivery_address = res.data.data[0].address;
 						uni.setStorage({
 							key: 'isVerification',
 							data: 'verification',
 							success() {
-								console.log('isVerification: verification')
+								console.log('isVerification: verification');
 							}
-						})
+						});
 						uni.showToast({
 							icon: 'none',
 							title: '验证成功',
 							duration: 1000
-						})
+						});
 					} else {
 						uni.showToast({
 							icon: 'none',
 							title: '验证失败',
 							duration: 1000
-						})
+						});
 					}
-					
 				}
-			})
+			}); */
 		},
 		//单选按钮
 		radio(key) {
@@ -749,7 +945,7 @@ export default {
 
 		//两个按钮切换
 		check(key) {
-			if(key == 1) {
+			if (key == 1) {
 				const value = uni.getStorageSync('isVerification');
 				this.isVerification = value;
 				if (this.isVerification != 'verification') {
@@ -793,44 +989,8 @@ export default {
 				});
 			}
 		},
-		
+
 		async finsheds() {
-			/* await uni
-				.request({
-					url: apiAddres + yanzhengUser,
-					method: 'GET',
-					header: {},
-					data: {
-						token: this.token,
-						user_identity_card_number: this.keyNumber
-					}
-				})
-				.then(res => {
-					console.log(res);
-					if (res[1].data.code === 200) {
-						uni.showToast({
-							icon: 'none',
-							title: '验证成功',
-							duration: 1000
-						});
-						this.user_number = res[1].data.data[0].user_number;
-						uni.setStorage({
-							key: 'isVerification',
-							data: 'verification',
-							success() {
-								console.log('isVerification: verification');
-							}
-						});
-						this.check(1);
-					} else {
-						uni.showToast({
-							icon: 'none',
-							title: '验证失败',
-							duration: 1000
-						});
-					}
-				});
-			console.log(this.user_number); */
 			const value = uni.getStorageSync('isVerification');
 			this.isVerification = value;
 			if (this.isVerification != 'verification') {
@@ -847,34 +1007,22 @@ export default {
 			this.$store.state.emptyNum = '';
 			this.$store.state.fullNum = '';
 			uni.removeStorage({
-				key:'isVerification',
-				success: (res) => {
-					console.log(res)
+				key: 'isVerification',
+				success: res => {
+					console.log(res);
 				}
-			})
-
-			/* if (this.role_type_id == 7) {
-				uni.navigateTo({
-					url: '../test/test'
-				});
-			}
-			if (this.role_type_id == 6) {
-				uni.navigateTo({
-					url: '../home/index'
-				});
-			}
-			if (this.role_type_id == 5) {
-				uni.navigateTo({
-					url: '../home/supply'
-				});
-			} */
-			uni.navigateBack({})
+			});
+			uni.navigateBack({});
 		}
 	}
 };
 </script>
 
 <style lang="less" scoped>
+	body {
+		position:fixed !important;
+		overflow: hidden !important;
+	}
 .commond {
 	width: 100vw;
 	height: 100vh;
@@ -1326,5 +1474,48 @@ export default {
 
 .blurry {
 	filter: blur(20rpx);
+}
+.userList {
+	background-color: rgb(245, 247, 255);
+	border-radius: 20rpx;
+	white-space: pre-wrap;
+	.userTitle {
+		width: 100%;
+		height: 100rpx;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		font-weight: 1000;
+	}
+	.userContent {
+		height: calc(100vh - 550rpx);
+		// overflow: scroll;
+		overflow: scroll;
+		
+		ul {
+			border-top: 2rpx solid rgb(228, 228, 228);
+			padding-bottom: 30rpx;
+			li {
+				width: 100%;
+				height: 90rpx;
+				display: flex;
+				align-items: center;
+				font-size: 32rpx;
+				overflow: scroll;
+				.spanLeft {
+					width: 260rpx;
+				}
+				.spanRight {
+					width: 100%;
+				}
+			}
+		}
+	}
+	.userBtn {
+		width: 500rpx;
+		color: #fff;
+		background-color: rgb(0, 110, 255);
+		margin: 20rpx auto;
+	}
 }
 </style>
