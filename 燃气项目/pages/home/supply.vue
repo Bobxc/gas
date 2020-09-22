@@ -83,7 +83,7 @@ export default {
 				{
 					imgs: '../../static/image/zu.png',
 					text: '库存查询',
-					paths: '/pages/orderinquiry/orderinquiry'
+					paths: '/pages/station/stationStockin'
 				}
 			],
 			containerBodyLists: [

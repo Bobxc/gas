@@ -263,6 +263,13 @@
 			"style": {
 				"navigationBarTitleText": ""
 			}
+		},
+		//站点库存
+		{
+			"path": "pages/station/stationStockin",
+			"style": {
+				"navigationBarTitleText": ""
+			}
 		}
 	],
 	"globalStyle": {

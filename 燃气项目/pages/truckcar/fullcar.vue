@@ -22,15 +22,15 @@
 		<view class="orderInformation">
 			<view class="content">
 				<ul class="cardlist" v-if="data.length > 0">
-					<li v-for="(item, index) in emptyList" :key="index" v-if="cut == 0" :class="{ evenLine: index % 2 == 1 }">
+					<li v-for="(item, index) in emptyList" :key="index" v-if="cut == 0 && emptynum > 0" :class="{ evenLine: index % 2 == 1 }">
 						<span>{{ ++index }}、燃气瓶编号：{{ item.gas_label_number }}</span>
 					</li>
-					<li v-for="(item, index) in fullList" :key="index" v-if="cut == 1" :class="{ evenLine: index % 2 == 1 }">
+					<li v-for="(item, index) in fullList" :key="index" v-if="cut == 1 && fullnum > 0" :class="{ evenLine: index % 2 == 1 }">
 						<span>{{ ++index }}、燃气瓶编号：{{ item.gas_label_number }}</span>
 					</li>
 				</ul>
 				<!-- 空空如也 -->
-				<view class="empty" v-if="data.length == 0">
+				<view class="empty" v-if="isEmpty">
 					<view class="emptyContent">
 						<view class="emptyImg"><image src="../../static/image/clear.png"></image></view>
 						<view class="emptyTitle">空空如也</view>
@@ -71,7 +71,8 @@ export default {
 				}
 			],
 			data: [],
-			token: ''
+			token: '',
+			isEmpty: false,
 		};
 	},
 	onLoad() {
@@ -99,7 +100,6 @@ export default {
 				method: 'GET',
 				header: {},
 				data: {
-					employee_number: 'sx201800002',
 					token: this.token
 				},
 				success: res => {
@@ -116,12 +116,26 @@ export default {
 							this.fullnum = this.fullList.length;
 						}
 					});
+					if(this.emptynum == 0) {
+						this.isEmpty = true;
+					}
 				}
 			});
 		},
 		//获取车内气瓶数量 缺接口
 		check(key) {
 			this.cut = key;
+			this.isEmpty = false;
+			if(key == 0) {
+				if(this.emptynum == 0) {
+					this.isEmpty = true;
+				}
+			}
+			if(key == 1) {
+				if(this.fullnum == 0) {
+					this.isEmpty = true;
+				}
+			}
 		},
 		toHome() {
 			uni.navigateBack({

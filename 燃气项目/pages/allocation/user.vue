@@ -127,9 +127,9 @@
 			<button @click="closeEmodeal">关闭</button>
 		</e-modal>
 		<!-- 身份证号/联系方式验证用户 -->
-		<view >
+		<view>
 			<e-modal class="userListModal" :visible.sync="verificateUser" width="90%" height="100%">
-				<view class="userList" style="height: 80vh; padding: 20rpx; overflow: auto;">
+				<view class="userList" style="height: 80vh; padding: 20rpx;">
 					<view class="userTitle"><span>身份识别</span></view>
 					<view class="userContent">
 						<ul style="position: relative;" v-for="(item, index) in userInfoList" :key="index">
@@ -235,7 +235,7 @@ import { apiAddres, cert, testZt, gtestZt, Dispatcher, zDispatcher, qDispatcher,
 import Modal from '../../components/x-modal/x-modal';
 import LotusLoading from '../../components/Winglau14-lotusLoading/Winglau14-LotusLoading.vue';
 export default {
-	components: { Modal, LotusLoading},
+	components: { Modal, LotusLoading },
 	data() {
 		return {
 			iconValue: 0,
@@ -255,47 +255,13 @@ export default {
 			},
 			buttonList: [{ className: 'button-one', text: '用户验证' }, { className: 'button-one', text: '气瓶分配' }],
 			list: [{ text: '身份证', value: '0' }, { text: '联系方式', value: '1' }],
-			userInfoList: [
-				/* {
-					user_name: '王慧',
-					usertype: '个体',
-					phone: 13333333333,
-					user_identity_card_number: 12344566,
-					delivery_address: '浙江省温州市鹿城区XX街道XX社区XX单元XX室',
-					principal: '王慧' 
-				},
-				{
-					user_name: '王慧',
-					usertype: '个体',
-					phone: 13333333333,
-					user_identity_card_number: 12344566,
-					delivery_address: '浙江省温州市鹿城区XX街道XX社区XX单元XX室',
-					principal: '王慧' 
-				},
-				{
-					user_name: '王慧',
-					usertype: '个体',
-					phone: 13333333333,
-					user_identity_card_number: 12344566,
-					delivery_address: '浙江省温州市鹿城区XX街道XX社区XX单元XX室',
-					principal: '王慧' 
-				},
-				{
-					user_name: '王慧',
-					usertype: '个体',
-					phone: 13333333333,
-					user_identity_card_number: 12344566,
-					delivery_address: '浙江省温州市鹿城区XX街道XX社区XX单元XX室',
-					principal: '王慧' 
-				} */
-			],
+			userInfoList: [],
 			arr: [],
 			token: '',
 			loginMark: '',
 			data: '',
 			gcEmptys: '',
 			gcFulls: '',
-			userNumber: 294617,
 			user_number: '',
 			certificate_id: '',
 			card_number: '',
@@ -736,7 +702,7 @@ export default {
 							duration: 1000
 						});
 					} else {
-						this.verificateUser = true;
+						// this.verificateUser = true;
 						this.lotusLoadingData.isShow = true;
 						uni.request({
 							url: apiAddres + GetUserBynum,
@@ -760,6 +726,7 @@ export default {
 										this.phone = this.userInfoList[0].phone;
 										this.keyNumber = this.userInfoList[0].user_identity_card_number;
 										this.delivery_address = this.userInfoList[0].delivery_address;
+										this.verificateUser = true;
 									} else {
 										this.verificateUser = false;
 										uni.showToast({
@@ -790,7 +757,6 @@ export default {
 							duration: 1000
 						});
 					} else {
-						this.verificateUser = true;
 						this.lotusLoadingData.isShow = true;
 						uni.request({
 							url: apiAddres + AppService,
@@ -814,6 +780,7 @@ export default {
 										this.phone = this.userInfoList[0].phone;
 										this.keyNumber = this.userInfoList[0].user_identity_card_number;
 										this.delivery_address = this.userInfoList[0].delivery_address;
+										this.verificateUser = true;
 									} else {
 										this.verificateUser = false;
 										uni.showToast({
@@ -833,110 +800,67 @@ export default {
 		},
 		//输入客户卡编号验证用户
 		leave() {
-			if(this.keyNumber != '') {
+			if (this.keyNumber != '') {
 				this.user_type_name = '';
 				this.usertype = '';
 				this.principal = '';
 				this.phone = '';
 				this.address = '';
 				this.userInfoList = [];
-				
-					this.verificateUserByCardNum = true;
-					this.lotusLoadingData.isShow = true;
-					uni.request({
-						url: apiAddres + yanzhengUser,
-						header: {},
-						method: 'GET',
-						data: {
-							token: this.token,
-							user_identity_card_number: this.keyNumber
-						},
-						success: res => {
-							console.log(res);
-							this.lotusLoadingData.isShow = false;
-							if (res.data.code == 200) {
-								if (res.data.data.length > 0) {
-									this.userInfoList = res.data.data;
-									this.checkedUserInfo = 0;
-									if(this.current == 0) {
-										this.keyWord = this.userInfoList[0].certificate_id;
-									}
-									if (this.current == 1) {
-										this.keyWord = this.userInfoList[0].phone;
-									}
-									this.user_name = this.userInfoList[0].user_name;
-									this.usertype = this.userInfoList[0].user_type_name;
-									this.principal = this.userInfoList[0].principal;
-									this.keyNumber = this.userInfoList[0].user_identity_card_number;
-									this.delivery_address = this.userInfoList[0].address;
-									uni.setStorage({
-										key: 'isVerification',
-										data: 'verification',
-										success() {
-											console.log('isVerification: verification');
-										}
-									});
-								} else {
-									this.keyWord = '';
-									this.user_name = '';
-									this.usertype = '';
-									this.principal = '';
-									this.delivery_address = '';
-									this.verificateUserByCardNum = false;
-									uni.showToast({
-										icon: 'none',
-										title: '无此用户',
-										duration: 1000
-									});
-									return;
+
+				this.lotusLoadingData.isShow = true;
+				uni.request({
+					url: apiAddres + yanzhengUser,
+					header: {},
+					method: 'GET',
+					data: {
+						token: this.token,
+						user_identity_card_number: this.keyNumber
+					},
+					success: res => {
+						console.log(res);
+						this.lotusLoadingData.isShow = false;
+						if (res.data.code == 200) {
+							if (res.data.data.length > 0) {
+								this.userInfoList = res.data.data;
+								this.checkedUserInfo = 0;
+								if (this.current == 0) {
+									this.keyWord = this.userInfoList[0].certificate_id;
 								}
+								if (this.current == 1) {
+									this.keyWord = this.userInfoList[0].phone;
+								}
+								this.user_name = this.userInfoList[0].user_name;
+								this.usertype = this.userInfoList[0].user_type_name;
+								this.principal = this.userInfoList[0].principal;
+								this.keyNumber = this.userInfoList[0].user_identity_card_number;
+								this.delivery_address = this.userInfoList[0].address;
+								uni.setStorage({
+									key: 'isVerification',
+									data: 'verification',
+									success() {
+										console.log('isVerification: verification');
+									}
+								});
+								this.verificateUserByCardNum = true;
+							} else {
+								this.keyWord = '';
+								this.user_name = '';
+								this.usertype = '';
+								this.principal = '';
+								this.delivery_address = '';
+								this.verificateUserByCardNum = false;
+								uni.showToast({
+									icon: 'none',
+									title: '无此用户',
+									duration: 1000
+								});
+								return;
 							}
 						}
-					});
-			}
-			
-			/* uni.request({
-				url: apiAddres + yanzhengUser,
-				header: {},
-				method: 'GET',
-				data: {
-					token: this.token,
-					user_identity_card_number: this.keyNumber
-				},
-				success: res => {
-					console.log(res);
-					if (res.data.code == 200) {
-						if (this.current == 0) {
-							this.keyWord = res.data.data[0].certificate_id;
-						}
-						if (this.current == 1) {
-							this.keyWord = res.data.data[0].phone;
-						}
-						this.usertype = res.data.data[0].user_type_name;
-						this.user_name = res.data.data[0].user_name;
-						this.phone = res.data.data[0].phone;
-						this.delivery_address = res.data.data[0].address;
-						uni.setStorage({
-							key: 'isVerification',
-							data: 'verification',
-							success() {
-								console.log('isVerification: verification');
-							}
-						});
-						uni.showToast({
-							icon: 'none',
-							title: '验证成功',
-							duration: 1000
-						});
-					} else {
-						uni.showToast({
-							icon: 'none',
-							title: '验证失败',
-							duration: 1000
-						});
 					}
-				}
-			}); */
+				});
+			}
 		},
 		//单选按钮
 		radio(key) {
@@ -1019,10 +943,10 @@ export default {
 </script>
 
 <style lang="less" scoped>
-	body {
-		position:fixed !important;
-		overflow: hidden !important;
-	}
+body {
+	position: fixed !important;
+	overflow: hidden !important;
+}
 .commond {
 	width: 100vw;
 	height: 100vh;
@@ -1478,7 +1402,8 @@ export default {
 .userList {
 	background-color: rgb(245, 247, 255);
 	border-radius: 20rpx;
-	white-space: pre-wrap;
+	height: 100%;
+	overflow: hidden;
 	.userTitle {
 		width: 100%;
 		height: 100rpx;
@@ -1490,8 +1415,8 @@ export default {
 	.userContent {
 		height: calc(100vh - 550rpx);
 		// overflow: scroll;
-		overflow: scroll;
-		
+		overflow: auto;
+
 		ul {
 			border-top: 2rpx solid rgb(228, 228, 228);
 			padding-bottom: 30rpx;
@@ -1501,7 +1426,6 @@ export default {
 				display: flex;
 				align-items: center;
 				font-size: 32rpx;
-				overflow: scroll;
 				.spanLeft {
 					width: 260rpx;
 				}

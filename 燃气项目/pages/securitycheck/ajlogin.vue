@@ -1,6 +1,8 @@
 <template>
+	<view>
 	<!-- 日常安检页面 -->
-	<view class="commond">
+	<!-- <view class="commond"> -->
+	<view :class="['commond', {blurry: this.blurry}]">
 		<!-- 验证方式 -->
 		<view class="verification">
 			<!-- 头部按钮和提示 -->
@@ -39,7 +41,7 @@
 								</li>
 								<span>客户卡编号</span>
 								<li class="message">
-									<input type="text" v-model="user_identity_card_number" @blur="verificateUser"/>
+									<input type="text" v-model="user_identity_card_number" @blur="verificateUser" />
 									<span><image src="../../static/image/PositionFocusSaoma.png"></image></span>
 								</li>
 							</ul>
@@ -74,16 +76,76 @@
 				<button @click="security" type="default">本人已确认无误</button>
 			</view>
 		</view>
+		
+		<!-- 身份证号/联系方式验证用户 -->
+		<e-modal class="userListModal" :visible.sync="verificateUserShow" width="90%" height="100%">
+			<view class="userList" style="height: 80vh; padding: 20rpx;">
+				<view class="userTitle"><span>身份识别</span></view>
+				<view class="userContent">
+					<ul style="position: relative;" v-for="(item, index) in userInfoList" :key="index">
+						<evan-radio-group v-model="checkedUserInfo" @change="chooseUserInfo">
+							<evan-radio :label="index">
+								<li>
+									<span class="spanLeft">用户类型：</span>
+									<span class="spanRight">{{ item.usertype }}</span>
+								</li>
+								<li>
+									<span class="spanLeft">用户名称：</span>
+									<span class="spanRight">{{ item.user_name }}</span>
+								</li>
+								<li>
+									<span class="spanLeft">证件编号：</span>
+									<span class="spanRight">{{ item.user_identity_card_number }}</span>
+								</li>
+								<li>
+									<span class="spanLeft">联系人：</span>
+									<span class="spanRight">{{ item.principal }}</span>
+								</li>
+								<li>
+									<span class="spanLeft">联系电话：</span>
+									<span class="spanRight">{{ item.phone }}</span>
+								</li>
+								<li>
+									<span class="spanLeft">配送地址：</span>
+									<span class="spanRight">{{ item.delivery_address }}</span>
+								</li>
+								<template slot="icon">
+									<uni-icons
+										type="circle-filled"
+										size="16"
+										color="#108ee9"
+										v-if="checkedUserInfo == index"
+										style="position: absolute; top: 28rpx; right: 20rpx;"
+									></uni-icons>
+									<uni-icons type="circle" size="16" color="#108ee9" v-else style="position: absolute; top: 28rpx; right: 20rpx;"></uni-icons>
+								</template>
+							</evan-radio>
+						</evan-radio-group>
+					</ul>
+				</view>
+				<button class="userBtn" type="default" @click="userBtn">确定</button>
+			</view>
+		</e-modal>
+		<LotusLoading :lotusLoadingData="lotusLoadingData"></LotusLoading>
+	</view>
+	<!-- 未验证弹出层 -->
+	<e-modal class="eModal" :visible.sync="visible" style="width: 750rpx; height: 80%;">
+		<span><image style="width: 150rpx; height: 150rpx;" src="../../static/image/ZU539.png"></image></span>
+		<p>还未验证用户信息</p>
+		<button @click="closeEmodeal">关闭</button>
+	</e-modal>
 	</view>
 </template>
 
 <script>
 //获取手机端音频
 import { apiAddres, GetUserBynum, AppService, securityCheck, yanzhengUser, uploadFile } from '../../common/common.js';
+import LotusLoading from '../../components/Winglau14-lotusLoading/Winglau14-LotusLoading.vue';
 const recorderManager = uni.getRecorderManager();
 const innerAudioContext = uni.createInnerAudioContext();
 innerAudioContext.autoplay = true;
 export default {
+	components: {LotusLoading},
 	data() {
 		return {
 			iconValue: 0,
@@ -100,9 +162,9 @@ export default {
 			role_type_id: '',
 			token: '',
 			loginMark: '',
-			certificate_id: null,
-			user_identity_card_number: null,
-			phone: null,
+			certificate_id: '',
+			user_identity_card_number: '',
+			phone: '',
 			imagerolePath: '',
 			imglist: [],
 			text: 'uni-app',
@@ -118,7 +180,19 @@ export default {
 			record_path_net: null,
 			security_check_state: 1,
 			description: '',
-			check_type: 1
+			check_type: 1,
+			//未验证弹出层
+			visible: false,
+			//选择用户遮罩层开关
+			verificateUserShow: false,
+			//用户列表
+			userInfoList: [],
+			checkedUserInfo: 0,
+			lotusLoadingData: {
+				isShow: false //设置显示加载中组件true显示false隐藏
+			},
+			isVerification: '',
+			blurry: false
 		};
 	},
 	onLoad() {
@@ -133,26 +207,26 @@ export default {
 		});
 
 		recorderManager.onStop(function(res) {
-			console.log(res)
+			console.log(res);
 			console.log('recorder stop' + JSON.stringify(res));
 			_this.record_path = res.tempFilePath;
-			if(_this.record_path != null) {
-				let filePath = res.tempFilePath
+			if (_this.record_path != null) {
+				let filePath = res.tempFilePath;
 				uni.uploadFile({
 					url: apiAddres + uploadFile,
 					filePath: filePath,
 					name: 'file',
 					formData: {},
-					success: (res) => {
-						console.log(res)
-						res.data = JSON.parse(res.data)
-						console.log(res.data.info)
-						if(res.data.code == 200) {
+					success: res => {
+						console.log(res);
+						res.data = JSON.parse(res.data);
+						console.log(res.data.info);
+						if (res.data.code == 200) {
 							_this.record_path_net = 'http://gasapi.tsingd.cn' + res.data.info;
-							console.log(_this.record_path_net)
+							console.log(_this.record_path_net);
 						}
 					}
-				})
+				});
 			}
 		});
 	},
@@ -199,6 +273,11 @@ export default {
 				this.playVoice();
 			}
 		},
+		//关闭遮罩层
+		closeEmodeal() {
+			this.visible = false;
+			this.blurry = false;
+		},
 		//验证方式切换 正常/异常
 		selected(item, index) {
 			console.log(item, index);
@@ -207,14 +286,47 @@ export default {
 				this.toAjlonginFive();
 			}
 		},
-		// 切换验证方式
-		/* radioChangeTwo(evt) {
-			this.currents = evt;
-			console.log(this.currents);
-			if (evt == 1) {
-				this.toAjlonginFive();
-			}
-		}, */
+		// 选择用户
+		chooseUserInfo(index) {
+			this.checkedUserInfo = index;			
+			this.user_identity_card_number = this.userInfoList[index].user_identity_card_number;
+		},
+		//选择弹出层确认按钮
+		userBtn() {
+			this.verificateUserShow = false;
+			uni.request({
+				url: apiAddres + yanzhengUser,
+				header: {},
+				method: 'GET',
+				data: {
+					token: this.token,
+					user_identity_card_number: this.user_identity_card_number
+				},
+				success: res => {
+					console.log('res', res);
+					if (res.data.code == 200) {
+						uni.showToast({
+							icon: 'none',
+							title: '验证成功',
+							duration: 1000
+						});
+						uni.setStorage({
+							key: 'isVerification',
+							data: 'verification',
+							success() {
+								console.log('isVerification: verification');
+							}
+						});
+					} else {
+						uni.showToast({
+							icon: 'none',
+							title: '验证失败',
+							duration: 1000
+						});
+					}
+				}
+			});
+		},
 		//验证方式切换  身份证/联系方式验证
 		radioChange(evt) {
 			this.current = evt;
@@ -239,35 +351,29 @@ export default {
 					if (res.tempFilePaths.length > 3) {
 						that.imglist = that.imglist.concat(JSON.parse(JSON.stringify(res.tempFilePaths))).slice(0, 3);
 						that.photo_path = that.imglist.join(',');
-						
-						
-						
 					} else {
 						if (that.imglist.length < 3) {
 							that.imglist = that.imglist.concat(JSON.parse(JSON.stringify(res.tempFilePaths)));
 							that.photo_path = that.imglist.join(',');
-							
-							
-							if(res.tempFilePaths.length>0) {
+
+							if (res.tempFilePaths.length > 0) {
 								let filePath = res.tempFilePaths[0];
 								uni.uploadFile({
 									url: apiAddres + uploadFile,
 									filePath: filePath,
 									name: 'file',
 									formData: {},
-									success: (res) => {
-										console.log(res)
-										res.data = JSON.parse(res.data)
-										console.log(res.data.info)
-										if(res.data.code == 200) {
-											this.photo_path_net.push('http://gasapi.tsingd.cn' + res.data.info)
-											console.log(this.photo_path_net.join(','))
+									success: res => {
+										console.log(res);
+										res.data = JSON.parse(res.data);
+										console.log(res.data.info);
+										if (res.data.code == 200) {
+											this.photo_path_net.push('http://gasapi.tsingd.cn' + res.data.info);
+											console.log(this.photo_path_net.join(','));
 										}
 									}
-								})
+								});
 							}
-							
-							
 						} else {
 							return;
 						}
@@ -282,129 +388,112 @@ export default {
 		//通过证件号码/联系方式获取用户信息
 		async getUserInfo() {
 			if (this.current === 0) {
-				console.log(1111);
-				const regIdCard = /^(^[1-9]\d{7}((0\d)|(1[0-2]))(([0|1|2]\d)|3[0-1])\d{3}$)|(^[1-9]\d{5}[1-9]\d{3}((0\d)|(1[0-2]))(([0|1|2]\d)|3[0-1])((\d{4})|\d{3}[Xx])$)$/;
-				if (!regIdCard.test(this.certificate_id)) {
-					uni.showToast({
-						icon: 'none',
-						title: '请输入正确的身份证号',
-						duration: 1000
-					});
-				} else {
-					await uni
-						.request({
-							url: apiAddres + GetUserBynum,
-							header: {},
-							method: 'GET',
-							data: {
-								token: this.token,
-								certificate_id: this.certificate_id
-							}
-						})
-						.then(res => {
-							console.log(res);
-							if (res[1].data.code === 200) {
-								this.user_identity_card_number = res[1].data.data[1].user_identity_card_number;
-								uni.request({
-									url: apiAddres + yanzhengUser,
-									header: {},
-									method: 'GET',
-									data: {
-										token: this.token,
-										user_identity_card_number: this.user_identity_card_number
-									},
-									success: res => {
-										console.log('res', res);
-										if (res.data.code === 200) {
-											uni.showToast({
-												icon: 'none',
-												title: '验证成功',
-												duration: 1000
-											});
-										} else {
-											uni.showToast({
-												icon: 'none',
-												title: '验证失败',
-												duration: 1000
-											});
-										}
-									}
-								});
-							}
-							if (res[1].data.code === 400) {
-								uni.showToast({
-									icon: 'none',
-									title: '参数有误,请重新输入',
-									duration: 2000
-								});
-							}
+				if (this.certificate_id != '') {
+					console.log(1111);
+					const regIdCard = /^(^[1-9]\d{7}((0\d)|(1[0-2]))(([0|1|2]\d)|3[0-1])\d{3}$)|(^[1-9]\d{5}[1-9]\d{3}((0\d)|(1[0-2]))(([0|1|2]\d)|3[0-1])((\d{4})|\d{3}[Xx])$)$/;
+					if (!regIdCard.test(this.certificate_id)) {
+						uni.showToast({
+							icon: 'none',
+							title: '请输入正确的身份证号',
+							duration: 1000
 						});
-				}
+					} else {
+						this.lotusLoadingData.isShow = true;
+						await uni
+							.request({
+								url: apiAddres + GetUserBynum,
+								header: {},
+								method: 'GET',
+								data: {
+									token: this.token,
+									certificate_id: this.certificate_id
+								}
+							})
+							.then(res => {
+								console.log(res);
+								this.lotusLoadingData.isShow = false;
+								if(res[1].data.code == 200) {
+									if(res[1].data.data.length > 0) {
+										this.userInfoList = res[1].data.data;
+										this.user_identity_card_number = res[1].data.data[0].user_identity_card_number;
+										this.verificateUserShow = true;
+									} else {
+										this.verificateUserShow = false;
+										this.user_identity_card_number = '';
+										uni.showToast({
+											icon: 'none',
+											title: '无此用户',
+											duration: 1000
+										});
+									}
+								}
+								if (res[1].data.code === 400) {
+									uni.showToast({
+										icon: 'none',
+										title: '参数有误,请重新输入',
+										duration: 2000
+									});
+								}
+							});
+					}
+				} else return;
 			}
 			if (this.current === 1) {
-				const regMobile = /^(0|86|17951)?(13[0-9]|15[0123456789]|17[678]|18[0-9]|14[57])[0-9]{8}$/;
-				if (!regMobile.test(this.phone)) {
-					uni.showToast({
-						icon: 'none',
-						title: '请输入正确手机号格式',
-						duration: 1000
-					});
-				} else {
-					await uni
-						.request({
-							url: apiAddres + AppService,
-							header: {},
-							method: 'GET',
-							data: {
-								token: this.token,
-								phone: this.phone
-							}
-						})
-						.then(res => {
-							console.log(res);
-							if (res[1].data.code === 200) {
-								this.user_identity_card_number = res[1].data.data[0].user_identity_card_number;
-								uni.request({
-									url: apiAddres + yanzhengUser,
-									header: {},
-									method: 'GET',
-									data: {
-										token: this.token,
-										user_identity_card_number: this.user_identity_card_number
-									},
-									success: res => {
-										console.log('res', res);
-										if (res.data.code === 200) {
-											uni.showToast({
-												icon: 'none',
-												title: '验证成功',
-												duration: 1000
-											});
-										} else {
-											uni.showToast({
-												icon: 'none',
-												title: '验证失败',
-												duration: 1000
-											});
-										}
-									}
-								});
-							}
-							if (res[1].data.code === 400) {
-								uni.showToast({
-									icon: 'none',
-									title: '参数有误,请重新输入',
-									duration: 2000
-								});
-							}
+				if (this.phone != '') {
+					const regMobile = /^(0|86|17951)?(13[0-9]|15[0123456789]|17[678]|18[0-9]|14[57])[0-9]{8}$/;
+					if (!regMobile.test(this.phone)) {
+						uni.showToast({
+							icon: 'none',
+							title: '请输入正确手机号格式',
+							duration: 1000
 						});
-				}
+					} else {
+						this.lotusLoadingData.isShow = true;
+						await uni
+							.request({
+								url: apiAddres + AppService,
+								header: {},
+								method: 'GET',
+								data: {
+									token: this.token,
+									phone: this.phone
+								}
+							})
+							.then(res => {
+								console.log(res);
+								this.lotusLoadingData.isShow = false;
+								if (res[1].data.code == 200) {
+									if(res[1].data.data.length > 0) {
+										this.userInfoList = res[1].data.data;
+										this.user_identity_card_number = res[1].data.data[0].user_identity_card_number;
+										this.verificateUserShow = true;
+									} else {
+										this.verificateUserShow = false;
+										this.user_identity_card_number = '';
+										uni.showToast({
+											icon: 'none',
+											title: '无此用户',
+											duration: 1000
+										})
+									}
+								}
+								if (res[1].data.code === 400) {
+									uni.showToast({
+										icon: 'none',
+										title: '参数有误,请重新输入',
+										duration: 2000
+									});
+								}
+							});
+					}
+				} else return;
 			}
 			console.log('user_identity_card_number', this.user_identity_card_number);
 		},
 		//通过输入客户卡编号验证用户
 		verificateUser() {
-			if(this.user_identity_card_number != null) {
+			if (this.user_identity_card_number != '') {
+				this.lotusLoadingData.isShow = true;
 				uni.request({
 					url: apiAddres + yanzhengUser,
 					header: {},
@@ -413,43 +502,68 @@ export default {
 						token: this.token,
 						user_identity_card_number: this.user_identity_card_number
 					},
-					success: (res) => {
-						console.log(res)
-						if(res.data.code ==200) {
-							if(this.current == 0) {
-								this.certificate_id = res.data.data[0].certificate_id
+					success: res => {
+						console.log(res);
+						if (res.data.code == 200) {
+							if(res.data.data.length > 0) {
+								this.lotusLoadingData.isShow = false;
+								this.userInfoList = res.data.data;
+								this.checkedUserInfo = 0;
+								if (this.current == 0) {
+									this.certificate_id = this.userInfoList[0].certificate_id;
+								}
+								if (this.current == 1) {
+									this.phone = this.userInfoList[0].phone;
+								}
+								uni.setStorage({
+									key: 'isVerification',
+									data: 'verification',
+									success() {
+										console.log('isVerification: verification');
+									}
+								});
+								this.verificateUserShow = true;
+							} else {
+								this.lotusLoadingData.isShow = false;
+								this.certificate_id = '';
+								this.phone = '';
+								uni.showToast({
+									icon: 'none',
+									title: '无此用户',
+									duration: 1000
+								});
 							}
-							if(this.current == 1) {
-								this.phone = res.data.data[0].phone
-							}
-							uni.showToast({
-								icon: 'none',
-								title: '验证成功',
-								duration: 1000
-							})
 						} else {
+							this.verificateUserShow = false;
+							this.certificate_id = '';
+							this.phone = '';
 							uni.showToast({
 								icon: 'none',
-								title: '验证失败',
+								title: '无此用户',
 								duration: 1000
-							})
+							});
 						}
 					}
-				})
-			} else {
-				return
-			}
+				});
+			} else return;
 		},
 		//安检提交请求
 		security() {
 			//安检记录提交校验
-			if (this.user_identity_card_number == '' || this.user_identity_card_number == null) {
+			/* if (this.user_identity_card_number == '' || this.user_identity_card_number == null) {
 				uni.showToast({
 					icon: 'none',
 					title: '请输入客户卡编号',
 					duration: 1000
 				});
-			} else if (this.photo_path == null) {
+			} */ const value = uni.getStorageSync('isVerification');
+				this.isVerification = value;
+				if(this.isVerification != 'verification') {
+					this.visible = true;
+					this.blurry = true;
+					return;
+				}
+			else if (this.photo_path == null) {
 				uni.showToast({
 					icon: 'none',
 					title: '请上传照片',
@@ -498,6 +612,12 @@ export default {
 						}
 					}
 				});
+				uni.removeStorage({
+					key: 'isVerification',
+					success: res => {
+						console.log(res);
+					}
+				});
 				this.$store.state.checkAbnormal = '';
 				if (this.role_type_id == 4) {
 					uni.navigateTo({
@@ -520,7 +640,13 @@ export default {
 		//返回按钮
 		toHomeIndex() {
 			this.$store.state.checkAbnormal = '';
-			uni.navigateBack({})
+			uni.removeStorage({
+				key: 'isVerification',
+				success: res => {
+					console.log(res);
+				}
+			});
+			uni.navigateBack({});
 		}
 	}
 };
@@ -843,6 +969,91 @@ export default {
 		.evan-radio:nth-child(2) {
 			margin-left: 80rpx !important;
 		}
+	}
+}
+.eModal {
+	display: flex;
+	flex-direction: column;
+	flex-wrap: wrap;
+	span {
+		justify-content: center;
+		margin: 0 auto;
+		margin-top: 20rpx;
+		width: 150rpx;
+		height: 150rpx;
+		display: block;
+		image {
+			width: 150rpx;
+			height: 150rpx;
+		}
+	}
+	p {
+		flex: 1;
+		width: 100%;
+		height: 45rpx;
+		font-size: 32rpx;
+		align-items: center;
+		text-align: center;
+		padding-top: 40rpx;
+	}
+	button {
+		width: 400rpx;
+		height: 80rpx;
+		background: rgba(0, 110, 255, 1);
+		border-radius: 16rpx;
+		font-size: 32rpx;
+		font-weight: bold;
+		line-height: 80rpx;
+		color: rgba(255, 255, 255, 1);
+		letter-spacing: 30rpx;
+		margin-top: 43rpx;
+		margin-bottom: 43rpx;
+	}
+}
+.blurry {
+	filter: blur(20rpx);
+}
+.userList {
+	background-color: rgb(245, 247, 255);
+	border-radius: 20rpx;
+	height: 100%;
+	overflow: hidden;
+	.userTitle {
+		width: 100%;
+		height: 100rpx;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		font-weight: 1000;
+	}
+	.userContent {
+		height: calc(100vh - 550rpx);
+		// overflow: scroll;
+		overflow: auto;
+
+		ul {
+			border-top: 2rpx solid rgb(228, 228, 228);
+			padding-bottom: 30rpx;
+			li {
+				width: 100%;
+				height: 90rpx;
+				display: flex;
+				align-items: center;
+				font-size: 32rpx;
+				.spanLeft {
+					width: 260rpx;
+				}
+				.spanRight {
+					width: 100%;
+				}
+			}
+		}
+	}
+	.userBtn {
+		width: 500rpx;
+		color: #fff;
+		background-color: rgb(0, 110, 255);
+		margin: 20rpx auto;
 	}
 }
 </style>

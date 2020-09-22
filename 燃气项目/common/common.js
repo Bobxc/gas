@@ -27,5 +27,6 @@ module.exports={
 	gasType: '/AppService/GetGcType',//获取气瓶类型
 	userInfo: '/AppService/GetUserInfo',//获取登录用户信息
 	uploadFile: '/UntilApi/PostFiles', //上传文件
+	getStockinquiry: '/AppService/GetStockinquiry', //获取站点库存
 }
 

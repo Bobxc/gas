@@ -11,15 +11,8 @@ const store = new Vuex.Store({
 		dispatcher: {},
 		//安检异常汇总
 		checkAbnormal: '',
-		userInfoList:[],
-		userInfo: {
-			user_name: '',
-			usertype: '',
-			principal: '',
-			phone:'',
-			keyNumber: '',
-			delivery_address: ''
-		}
+		// userInfoList:[],
+		
 	},
 	mutations: {
 		

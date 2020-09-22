@@ -10,11 +10,11 @@
 			</view>
 			<view class="flex-button">
 				<!-- <span :class="['button-two', {'button-one' : key === cut }]" v-for="(val,key) in buttonList" :key="key" @click="check(key,val.path)" v-html="val.text"> -->
-				<span :class="['button-two', { 'button-one': 0 === cut }]" @click="acceptable">
+				<span :class="['button-two', { 'button-one': 0 == cut }]" @click="acceptable">
 					<span>可接订单</span>
 					<span style="color: red;">({{ acceptOrderNum }})</span>
 				</span>
-				<span :class="['button-two', { 'button-one': 1 === cut }]" @click="received">
+				<span :class="['button-two', { 'button-one': 1 == cut }]" @click="received">
 					<span>已接订单</span>
 					<span style="color: red;">({{ receivedOrderNum }})</span>
 				</span>
@@ -22,7 +22,7 @@
 		</view>
 		<view class="bottom_information">
 			<view class="content">
-				<view v-if="cut === 0">
+				<view v-if="cut == 0 && acceptOrderNum > 0">
 					<ul class="cardlist" v-for="(item, index) in acceptableOrders" :key="index" >
 						<li style="font-size: 28rpx;height: 40rpx; padding-top: 24rpx;">钢瓶规格 :{{ item.specification_id }}</li>
 						<li style="font-size: 28rpx;color: #0069FF;">
@@ -33,14 +33,14 @@
 						<li>配送电话 : {{ item.link_phone }}</li>
 						<li>配送地址 : {{ item.link_address }}</li>
 						<div class="statreWrap">
-							<button v-if="cut === 0">我要接单</button>
+							<button v-if="cut == 0">我要接单</button>
 							<div class="statre" v-else>
 								<span style="color: #0069FF;">{{ item.order_type_name }}</span>
 							</div>
 						</div>
 					</ul>
 				</view>
-				<view v-if="cut === 1">
+				<view v-if="cut == 1 && receivedOrderNum > 0">
 					<ul class="cardlist" v-for="(item, index) in orderReceived" :key="index">
 						<li style="font-size: 28rpx;height: 40rpx; padding-top: 24rpx;">钢瓶规格 :{{ item.specification_id }}</li>
 						<li style="font-size: 28rpx;color: #0069FF;">
@@ -51,7 +51,7 @@
 						<li>配送电话 : {{ item.link_phone }}</li>
 						<li>配送地址 : {{ item.link_address }}</li>
 						<div class="statreWrap">
-							<button v-if="cut === 0">我要接单</button>
+							<button v-if="cut == 0">我要接单</button>
 							<div class="statre" v-else>
 								<span style="color: #0069FF;">{{ item.order_type_name }}</span>
 							</div>
@@ -101,9 +101,7 @@ export default {
 			acceptOrderNum: 0,
 			receivedOrderNum: 0,
 			cardlist: [],
-			enterprise_number: '33030100001',
 			data: [],
-			dispatcher_number: '1002640',
 			token: '',
 			//可接订单
 			acceptableOrders: [],
@@ -153,8 +151,7 @@ export default {
 				method: 'GET',
 				header: {},
 				data: {
-					token: this.token,
-					enterprise_number: this.enterprise_number
+					token: this.token
 				}
 			}).then(res => {
 				this.lotusLoadingData.isShow = false;
@@ -172,8 +169,7 @@ export default {
 				method: 'GET',
 				header: {},
 				data: {
-					token: this.token,
-					dispatcher_number: this.dispatcher_number
+					token: this.token
 				}
 			}).then(res => {
 				this.orderReceived = res[1].data.data;
@@ -181,9 +177,7 @@ export default {
 			});
 		},
 		toHome() {
-			uni.navigateBack({
-				delta: 1
-			});
+			uni.navigateBack({});
 		}
 	}
 };
