@@ -53,29 +53,27 @@
 		</view>
 		<!-- 分页 -->
 		<view style="display: flex;">
-		<view class="content" style="width: 710rpx; height: 120rpx; display: flex; align-items: center; background-color: #fff; margin: 0 auto; border-radius: 20rpx;">
-			<!-- <paging background="#E8EEFF" color="#000000" :total="total" activecolor="#ffffff" activebackground="#0045FF" :pageSize="2" v-model="curren" @changes="dd"></paging> -->
-			<paging
-				:total="total"
-				:pageSize="this.pageSize"
-				background="#e8eeff"
-				color="#000000"
-				activecolor="#ffffff"
-				activebackground="#0045ff"
-				:first="false"
-				v-model="pageNo"
-				@changes="dd"
-				@goPage = "goPage"
-			>
-				<template slot="arrow-left">
-					<uni-icons type="arrowleft" size="15" color="#0045ff" background="#e8eeff" style="font-weight: 900;"></uni-icons>
-				</template>
-				<template slot="arrow-right">
-					<uni-icons type="arrowright" size="15" color="#0045ff" background="#e8eeff" style="font-weight: 900;"></uni-icons>
-				</template>
-			</paging>
-		</view>
-		
+			<view class="content" style="width: 710rpx; height: 120rpx; display: flex; align-items: center; background-color: #fff; margin: 0 auto; border-radius: 20rpx;">
+				<!-- <paging background="#E8EEFF" color="#000000" :total="total" activecolor="#ffffff" activebackground="#0045FF" :pageSize="2" v-model="curren" @changes="dd"></paging> -->
+				<paging
+					:total="total"
+					:pageSize="this.pageSize"
+					background="#e8eeff"
+					color="#000000"
+					activecolor="#ffffff"
+					activebackground="#0045ff"
+					:first="false"
+					v-model="pageNo"
+					@changes="dd"
+				>
+					<template slot="arrow-left">
+						<uni-icons type="arrowleft" size="15" color="#0045ff" background="#e8eeff" style="font-weight: 900;"></uni-icons>
+					</template>
+					<template slot="arrow-right">
+						<uni-icons type="arrowright" size="15" color="#0045ff" background="#e8eeff" style="font-weight: 900;"></uni-icons>
+					</template>
+				</paging>
+			</view>
 		</view>
 		<!-- 加载动画 -->
 		<LotusLoading :lotusLoadingData="lotusLoadingData"></LotusLoading>
@@ -146,31 +144,48 @@ export default {
 				},
 				success: res => {
 					console.log(res);
-					
+
 					this.lotusLoadingData.isShow = false;
-					if(res.data.code == 200) {
+					if (res.data.code == 200) {
 						this.total = res.data.data.total;
 						this.cardlists = res.data.data.result;
 					}
-					//强制渲染
-					// this.$nextTick(() => {
-					// 	this.cardlists = res.data.data;
-					// });
 				}
 			});
 		},
-		//分页按钮
+		//分页按钮和输入页面跳转
 		dd(index) {
 			console.log(index);
+			if (index > this.total / this.pageSize) {
+				uni.showModal({
+					title: '提示',
+					content: '输入的页码值大于总页数!',
+					showCancel: false,
+					success(res) {
+						if (res.confirm) {
+						} else if (res.cancel) {
+						}
+					}
+				});
+				return;
+			}
+			if (index <= 0) {
+				uni.showModal({
+					title: '提示',
+					content: '输入的页码值不能小于1!',
+					showCancel: false,
+					success(res) {
+						if (res.confirm) {
+						} else if (res.cancel) {
+						}
+					}
+				});
+				return;
+			}
 			this.pageNo = index;
 			this.GetOrderInfoByCorpDispatcher();
 		},
-		//输入页数查询
-		goPage(val) {
-			console.log("123",val)
-			this.pageNo = val;
-			this.GetOrderInfoByCorpDispatcher();
-		},
+
 		//返回主页
 		toBack() {
 			uni.navigateBack({});
@@ -179,11 +194,44 @@ export default {
 		bindChange1(value) {
 			console.log(value);
 			this.value1 = value;
+			let valu1 = Number(this.value1.split('-').join(''));
+			let valu2 = Number(this.value2.split('-').join(''));
+			if (valu1 < valu2) {
+				this.GetOrderInfoByCorpDispatcher();
+			} else {
+				this.value1 = '2019-06-22';
+				uni.showModal({
+					title: '提示',
+					content: '起始日期大于截止日期！',
+					showCancel: false,
+					success(res) {
+						if (res.confirm) {
+						} else if (res.cancel) {
+						}
+					}
+				});
+			}
 		},
 
 		bindChange2(value) {
+			let _this = this;
 			console.log(value);
 			this.value2 = value;
+			let val1 = Number(this.value1.split('-').join(''));
+			let val2 = Number(this.value2.split('-').join(''));
+			if (val1 > val2) {
+				uni.showModal({
+					title: '提示',
+					content: '截止日期小于起始日期！',
+					showCancel: false,
+					success(res) {
+						if (res.confirm) {
+						} else if (res.cancel) {
+						}
+					}
+				});
+				return;
+			}
 			this.GetOrderInfoByCorpDispatcher();
 		},
 		bindCancel1() {

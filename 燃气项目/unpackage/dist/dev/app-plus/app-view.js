@@ -14036,9 +14036,6 @@ var render = function() {
                   on: {
                     changes: function($event) {
                       return _vm.$handleViewEvent($event)
-                    },
-                    goPage: function($event) {
-                      return _vm.$handleViewEvent($event)
                     }
                   },
                   model: {
@@ -14299,23 +14296,70 @@ var render = function() {
                     },
                     [_vm._v("尾页")]
                   )
-                : _vm._e()
+                : _vm._e(),
+              _c(
+                "v-uni-view",
+                {
+                  staticStyle: {
+                    width: "90rpx",
+                    height: "60rpx",
+                    border: "1px solid #0045ff",
+                    "border-radius": "10rpx",
+                    "background-color": "#e8eeff"
+                  },
+                  attrs: { _i: 10 }
+                },
+                [
+                  _c("v-uni-input", {
+                    staticStyle: { width: "90rpx", height: "60rpx" },
+                    attrs: { type: "number", _i: 11 },
+                    model: {
+                      value: _vm._$g(11, "v-model"),
+                      callback: function($$v) {
+                        _vm.$handleVModelEvent(11, $$v)
+                      },
+                      expression: "choosePage"
+                    }
+                  })
+                ],
+                1
+              ),
+              _c(
+                "v-uni-view",
+                {
+                  staticStyle: {
+                    width: "60rpx",
+                    height: "60rpx",
+                    border: "1px solid #0045ff",
+                    "border-radius": "10rpx",
+                    "background-color": "#e8eeff"
+                  },
+                  attrs: { _i: 12 },
+                  on: {
+                    click: function($event) {
+                      return _vm.$handleViewEvent($event)
+                    }
+                  }
+                },
+                [_c("span", { attrs: { _i: 13 } }, [_vm._v("GO")])],
+                1
+              )
             ],
             2
           ),
-          _vm._$g(10, "i")
+          _vm._$g(14, "i")
             ? _c(
                 "v-uni-view",
-                { staticClass: _vm._$g(10, "sc"), attrs: { _i: 10 } },
+                { staticClass: _vm._$g(14, "sc"), attrs: { _i: 14 } },
                 [
-                  _c("v-uni-view", { attrs: { _i: 11 } }, [
+                  _c("v-uni-view", { attrs: { _i: 15 } }, [
                     _vm._v(
                       "当前页：" +
-                        _vm._$g(11, "t0-0") +
+                        _vm._$g(15, "t0-0") +
                         "，数据总量：" +
-                        _vm._$g(11, "t0-1") +
+                        _vm._$g(15, "t0-1") +
                         "条，每页数据：" +
-                        _vm._$g(11, "t0-2")
+                        _vm._$g(15, "t0-2")
                     )
                   ])
                 ],
@@ -14417,7 +14461,7 @@ if(false) {}
 var ___CSS_LOADER_API_IMPORT___ = __webpack_require__(/*! ./node_modules/css-loader/dist/runtime/api.js */ 10);
 exports = ___CSS_LOADER_API_IMPORT___(false);
 // Module
-exports.push([module.i, "\n@charset \"UTF-8\";\n.fy[data-v-26228eb6] {\n\tdisplay: -webkit-box;\n\tdisplay: -webkit-flex;\n\tdisplay: flex;\n\t-webkit-box-pack: center;\n\t-webkit-justify-content: center;\n\t        justify-content: center;\n\tmargin: auto;\n\twidth: 750rpx;\n\ttext-align: center;\n}\n.fy uni-view[data-v-26228eb6] {\n\tdisplay: -webkit-box;\n\tdisplay: -webkit-flex;\n\tdisplay: flex;\n\t-webkit-box-align: center;\n\t-webkit-align-items: center;\n\t        align-items: center;\n\t-webkit-box-pack: center;\n\t-webkit-justify-content: center;\n\t        justify-content: center;\n\twidth: 60rpx;\n\theight: 60rpx;\n\tfont-size: 12px;\n\tmargin-left: 10rpx;\n}\n.btn-view[data-v-26228eb6] {\n\tmargin-top: 20px;\n}\n", ""]);
+exports.push([module.i, "\n@charset \"UTF-8\";\n.fy[data-v-26228eb6] {\n\tdisplay: -webkit-box;\n\tdisplay: -webkit-flex;\n\tdisplay: flex;\n\t-webkit-box-pack: center;\n\t-webkit-justify-content: center;\n\t        justify-content: center;\n\tmargin: auto;\n\t/* width: 750rpx; */\n\twidth: 710rpx;\n\ttext-align: center;\n}\n.fy uni-view[data-v-26228eb6] {\n\tdisplay: -webkit-box;\n\tdisplay: -webkit-flex;\n\tdisplay: flex;\n\t-webkit-box-align: center;\n\t-webkit-align-items: center;\n\t        align-items: center;\n\t-webkit-box-pack: center;\n\t-webkit-justify-content: center;\n\t        justify-content: center;\n\twidth: 60rpx;\n\theight: 60rpx;\n\tfont-size: 12px;\n\tmargin-left: 10rpx;\n}\n.btn-view[data-v-26228eb6] {\n\tmargin-top: 20px;\n}\n", ""]);
 // Exports
 module.exports = exports;
 

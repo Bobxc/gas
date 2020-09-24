@@ -510,21 +510,14 @@ export default {
 							if(res.data.info == 'CertificateExist') {
 								uni.showToast({
 									icon: 'none',
-									title: '证件已注册',
+									title: '证件号码已存在',
 									duration: 1000
 								})
 							}
 							if(res.data.info == 'UserIdentityCardNumberUsed') {
 								uni.showToast({
 									icon: 'none',
-									title: '客户卡编号已被使用',
-									duration: 1000
-								})
-							}
-							if(res.data.info == 'CertificateExist') {
-								uni.showToast({
-									icon: 'none',
-									title: '身份证号已存在',
+									title: '客户卡编号已注册',
 									duration: 1000
 								})
 							}
