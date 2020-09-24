@@ -1,139 +1,161 @@
 <template>
 	<view>
-	<!-- 日常安检页面 -->
-	<!-- <view class="commond"> -->
-	<view :class="['commond', {blurry: this.blurry}]">
-		<!-- 验证方式 -->
-		<view class="verification">
-			<!-- 头部按钮和提示 -->
-			<view class="tittle_i">
-				<span @click="toHomeIndex"><image src="../../static/image/LIcon.png"></image></span>
-				<p>日常安检</p>
+		<!-- 日常安检页面 -->
+		<!-- <view class="commond"> -->
+		<view :class="['commond', { blurry: this.blurry }]">
+			<!-- 验证方式 -->
+			<view class="verification">
+				<!-- 头部按钮和提示 -->
+				<view class="tittle_i">
+					<span @click="toHomeIndex"><image src="../../static/image/LIcon.png"></image></span>
+					<p>日常安检</p>
+				</view>
 			</view>
-		</view>
-		<view class="bottom_information">
-			<view class="content">
-				<!-- 验证方式 -->
-				<view class="manner">
-					<view class="orderInformation">
-						<view class="orderInformation-list">
-							<view class="verify ">
-								<view class="verify-title">验证方式</view>
-								<view class="verify-content">
-									<evan-radio-group @change="radioChange">
-										<evan-radio v-model="iconValue" :label="index" v-for="(item, index) in list" :key="item.value">
-											<text class="evan-radio-show__label">{{ item.text }}</text>
-											<template slot="icon">
-												<uni-icons type="circle-filled" size="16" color="#108ee9" v-if="current === index"></uni-icons>
-												<uni-icons type="circle" size="16" color="#108ee9" v-else></uni-icons>
-											</template>
-										</evan-radio>
-									</evan-radio-group>
+			<view class="bottom_information">
+				<view class="content">
+					<!-- 验证方式 -->
+					<view class="manner" :style="{ height: record_path ? '1100rpx' : '1002rpx' }">
+						<view class="orderInformation" :style="{ height: record_path ? '1050rpx' : '932rpx' }">
+							<view class="orderInformation-list">
+								<view class="verify ">
+									<view class="verify-title">验证方式</view>
+									<view class="verify-content">
+										<evan-radio-group @change="radioChange">
+											<evan-radio v-model="iconValue" :label="index" v-for="(item, index) in list" :key="item.value">
+												<text class="evan-radio-show__label">{{ item.text }}</text>
+												<template slot="icon">
+													<uni-icons type="circle-filled" size="16" color="#108ee9" v-if="current === index"></uni-icons>
+													<uni-icons type="circle" size="16" color="#108ee9" v-else></uni-icons>
+												</template>
+											</evan-radio>
+										</evan-radio-group>
+									</view>
+								</view>
+								<ul class="material ">
+									<span v-if="current == 0">证件号码</span>
+									<span v-if="current == 1">联系方式</span>
+									<li class="message">
+										<input type="text" v-model="certificate_id" v-if="current == 0" @blur="getUserInfo" />
+										<input type="text" v-model="phone" v-if="current == 1" @blur="getUserInfo" />
+										<span><image src="../../static/image/PositionFocusSaoma.png"></image></span>
+									</li>
+									<span>客户卡编号</span>
+									<li class="message">
+										<input type="text" v-model="user_identity_card_number" @blur="verificateUser" />
+										<span><image src="../../static/image/PositionFocusSaoma.png"></image></span>
+									</li>
+								</ul>
+								<ul class="cmeara">
+									<li class="photo" @click="takePhoto()">
+										<image src="../../static/image/Camera.png" mode=""></image>
+										<p>现场取证</p>
+									</li>
+									<li v-for="(val, key) in imglist" :key="key" @click="deletePic(key)"><image :src="val" mode=""></image></li>
+								</ul>
+								<!-- <button type="default" @click="recording">{{ voiceTis }}</button> -->
+								<!-- 录音UI效果 -->
+								<view class="record" :class="recording ? '' : 'hidden'">
+									<view class="ing" :class="willStop ? 'hidden' : ''"><view class="icon luyin2"></view></view>
+									<view class="cancel" :class="willStop ? '' : 'hidden'"><view class="icon chehui"></view></view>
+									<view class="tis" :class="willStop ? 'change' : ''">{{ recordTis }}</view>
+								</view>
+								<view
+									class="voice-mode"
+									:class="[isVoice ? '' : 'hidden', recording ? 'recording' : '']"
+									@touchstart="voiceBegin"
+									@touchmove.stop.prevent="voiceIng"
+									@touchend="voiceEnd"
+									@touchcancel="voiceCancel"
+								>
+									{{ voiceTis }}
+								</view>
+								<button type="default" @touchstart="voiceBegin" @touchmove.stop.prevent="voiceIng" @touchend="voiceEnd" @touchcancel="voiceCancel">
+									{{ voiceTis }}
+								</button>
+								<!-- <span>最多拍摄三张</span> -->
+								<view class="paishe">
+									<image src="../../static/image/Warning.png"></image>
+									<span>最多上传3张</span>
 								</view>
 							</view>
-							<ul class="material ">
-								<span v-if="current == 0">证件号码</span>
-								<span v-if="current == 1">联系方式</span>
-								<li class="message">
-									<input type="text" v-model="certificate_id" v-if="current == 0" @blur="getUserInfo" />
-									<input type="text" v-model="phone" v-if="current == 1" @blur="getUserInfo" />
-									<span><image src="../../static/image/PositionFocusSaoma.png"></image></span>
-								</li>
-								<span>客户卡编号</span>
-								<li class="message">
-									<input type="text" v-model="user_identity_card_number" @blur="verificateUser" />
-									<span><image src="../../static/image/PositionFocusSaoma.png"></image></span>
-								</li>
-							</ul>
-							<ul class="cmeara">
-								<li class="photo" @click="takePhoto()">
-									<image src="../../static/image/Camera.png" mode=""></image>
-									<p>现场取证</p>
-								</li>
-								<li v-for="(val, key) in imglist" :key="key"><image :src="val" mode=""></image></li>
-							</ul>
-							<!-- <span>最多拍摄三张</span> -->
-							<button type="default" @click="recording">{{ recordingText }}</button>
-							<view class="paishe">
-								<image src="../../static/image/Warning.png"></image>
-								<span>最多上传3张</span>
+							<view v-if="this.record_path" style="width: 100%; display: flex; justify-content: center; position: absolute; bottom: 30rpx;" @tap="playVoice">
+								<image style="width: 650rpx; height: 100rpx;" src="../../static/image/record.jpg"></image>
 							</view>
 						</view>
 					</view>
-				</view>
-				<view class="solution">
-					<p>验证方式</p>
-					<evan-radio-group v-for="(item, index) in tit" @change="selected(item, index)" :key="index">
-						<evan-radio v-model="iconValueTwo" :label="index" :key="item.value">
-							<text class="evan-radio-show__label">{{ item.text }}</text>
-							<template slot="icon">
-								<uni-icons type="circle-filled" size="16" color="#108ee9" v-if="iconValueTwo === index"></uni-icons>
-								<uni-icons type="circle" size="16" color="#108ee9" v-else></uni-icons>
-							</template>
-						</evan-radio>
-					</evan-radio-group>
-				</view>
-				<button @click="security" type="default">本人已确认无误</button>
-			</view>
-		</view>
-		
-		<!-- 身份证号/联系方式验证用户 -->
-		<e-modal class="userListModal" :visible.sync="verificateUserShow" width="90%" height="100%">
-			<view class="userList" style="height: 80vh; padding: 20rpx;">
-				<view class="userTitle"><span>身份识别</span></view>
-				<view class="userContent">
-					<ul style="position: relative;" v-for="(item, index) in userInfoList" :key="index">
-						<evan-radio-group v-model="checkedUserInfo" @change="chooseUserInfo">
-							<evan-radio :label="index">
-								<li>
-									<span class="spanLeft">用户类型：</span>
-									<span class="spanRight">{{ item.usertype }}</span>
-								</li>
-								<li>
-									<span class="spanLeft">用户名称：</span>
-									<span class="spanRight">{{ item.user_name }}</span>
-								</li>
-								<li>
-									<span class="spanLeft">证件编号：</span>
-									<span class="spanRight">{{ item.user_identity_card_number }}</span>
-								</li>
-								<li>
-									<span class="spanLeft">联系人：</span>
-									<span class="spanRight">{{ item.principal }}</span>
-								</li>
-								<li>
-									<span class="spanLeft">联系电话：</span>
-									<span class="spanRight">{{ item.phone }}</span>
-								</li>
-								<li>
-									<span class="spanLeft">配送地址：</span>
-									<span class="spanRight">{{ item.delivery_address }}</span>
-								</li>
+					<view class="solution">
+						<p>验证方式</p>
+						<evan-radio-group v-for="(item, index) in tit" @change="selected(item, index)" :key="index">
+							<evan-radio v-model="iconValueTwo" :label="index" :key="item.value">
+								<text class="evan-radio-show__label">{{ item.text }}</text>
 								<template slot="icon">
-									<uni-icons
-										type="circle-filled"
-										size="16"
-										color="#108ee9"
-										v-if="checkedUserInfo == index"
-										style="position: absolute; top: 28rpx; right: 20rpx;"
-									></uni-icons>
-									<uni-icons type="circle" size="16" color="#108ee9" v-else style="position: absolute; top: 28rpx; right: 20rpx;"></uni-icons>
+									<uni-icons type="circle-filled" size="16" color="#108ee9" v-if="iconValueTwo === index"></uni-icons>
+									<uni-icons type="circle" size="16" color="#108ee9" v-else></uni-icons>
 								</template>
 							</evan-radio>
 						</evan-radio-group>
-					</ul>
+					</view>
+					<button @click="security" type="default">本人已确认无误</button>
 				</view>
-				<button class="userBtn" type="default" @click="userBtn">确定</button>
 			</view>
+
+			<!-- 身份证号/联系方式验证用户 -->
+			<e-modal class="userListModal" :visible.sync="verificateUserShow" width="90%" height="100%">
+				<view class="userList" style="height: 80vh; padding: 20rpx;">
+					<view class="userTitle"><span>身份识别</span></view>
+					<view class="userContent">
+						<ul style="position: relative;" v-for="(item, index) in userInfoList" :key="index">
+							<evan-radio-group v-model="checkedUserInfo" @change="chooseUserInfo">
+								<evan-radio :label="index">
+									<li>
+										<span class="spanLeft">用户类型：</span>
+										<span class="spanRight">{{ item.usertype }}</span>
+									</li>
+									<li>
+										<span class="spanLeft">用户名称：</span>
+										<span class="spanRight">{{ item.user_name }}</span>
+									</li>
+									<li>
+										<span class="spanLeft">证件编号：</span>
+										<span class="spanRight">{{ item.user_identity_card_number }}</span>
+									</li>
+									<li>
+										<span class="spanLeft">联系人：</span>
+										<span class="spanRight">{{ item.principal }}</span>
+									</li>
+									<li>
+										<span class="spanLeft">联系电话：</span>
+										<span class="spanRight">{{ item.phone }}</span>
+									</li>
+									<li>
+										<span class="spanLeft">配送地址：</span>
+										<span class="spanRight">{{ item.delivery_address }}</span>
+									</li>
+									<template slot="icon">
+										<uni-icons
+											type="circle-filled"
+											size="16"
+											color="#108ee9"
+											v-if="checkedUserInfo == index"
+											style="position: absolute; top: 28rpx; right: 20rpx;"
+										></uni-icons>
+										<uni-icons type="circle" size="16" color="#108ee9" v-else style="position: absolute; top: 28rpx; right: 20rpx;"></uni-icons>
+									</template>
+								</evan-radio>
+							</evan-radio-group>
+						</ul>
+					</view>
+					<button class="userBtn" type="default" @click="userBtn">确定</button>
+				</view>
+			</e-modal>
+			<LotusLoading :lotusLoadingData="lotusLoadingData"></LotusLoading>
+		</view>
+		<!-- 未验证弹出层 -->
+		<e-modal class="eModal" :visible.sync="visible" style="width: 750rpx; height: 80%;">
+			<span><image style="width: 150rpx; height: 150rpx;" src="../../static/image/ZU539.png"></image></span>
+			<p>还未验证用户信息</p>
+			<button @click="closeEmodeal">关闭</button>
 		</e-modal>
-		<LotusLoading :lotusLoadingData="lotusLoadingData"></LotusLoading>
-	</view>
-	<!-- 未验证弹出层 -->
-	<e-modal class="eModal" :visible.sync="visible" style="width: 750rpx; height: 80%;">
-		<span><image style="width: 150rpx; height: 150rpx;" src="../../static/image/ZU539.png"></image></span>
-		<p>还未验证用户信息</p>
-		<button @click="closeEmodeal">关闭</button>
-	</e-modal>
 	</view>
 </template>
 
@@ -145,12 +167,12 @@ const recorderManager = uni.getRecorderManager();
 const innerAudioContext = uni.createInnerAudioContext();
 innerAudioContext.autoplay = true;
 export default {
-	components: {LotusLoading},
+	components: { LotusLoading },
 	data() {
 		return {
 			iconValue: 0,
 			iconValueTwo: 0,
-			num: 0,
+			// num: 0,
 			current: 0,
 			currents: 0,
 			setIntervalOut: null,
@@ -168,8 +190,27 @@ export default {
 			imagerolePath: '',
 			imglist: [],
 			text: 'uni-app',
-			voicePath: '',
-			recordingText: '按住说话',
+			// voicePath: '',
+
+			//录音相关参数
+			// #ifndef H5
+			//H5不能录音
+			RECORDER: uni.getRecorderManager(),
+			// #endif
+			isVoice: false,
+			voiceTis: '按住说话',
+			recordTis: '手指上滑 取消发送',
+			recording: false,
+			willStop: false,
+			initPoint: { identifier: 0, Y: 0 },
+			recordTimer: null,
+			recordLength: 0,
+
+			//播放语音相关参数
+			AUDIO: uni.createInnerAudioContext(),
+			playMsgid: null,
+			VoiceTimer: null,
+
 			n: 0,
 			employee_number: 'sx201800002',
 			photo_path: null,
@@ -206,29 +247,21 @@ export default {
 			}
 		});
 
-		recorderManager.onStop(function(res) {
-			console.log(res);
-			console.log('recorder stop' + JSON.stringify(res));
-			_this.record_path = res.tempFilePath;
-			if (_this.record_path != null) {
-				let filePath = res.tempFilePath;
-				uni.uploadFile({
-					url: apiAddres + uploadFile,
-					filePath: filePath,
-					name: 'file',
-					formData: {},
-					success: res => {
-						console.log(res);
-						res.data = JSON.parse(res.data);
-						console.log(res.data.info);
-						if (res.data.code == 200) {
-							_this.record_path_net = 'http://gasapi.tsingd.cn' + res.data.info;
-							console.log(_this.record_path_net);
-						}
-					}
-				});
-			}
+		// this.getMsgList();
+		//语音自然播放结束
+		// this.AUDIO.onEnded((res)=>{
+		// 	this.playMsgid=null;
+		// });
+		// #ifndef H5
+		//录音开始事件
+		this.RECORDER.onStart(e => {
+			this.recordBegin(e);
 		});
+		//录音结束事件
+		this.RECORDER.onStop(e => {
+			this.recordEnd(e);
+		});
+		// #endif
 	},
 	//手机物理返回键
 	onBackPress(options) {
@@ -239,40 +272,106 @@ export default {
 		return true;
 	},
 	methods: {
-		// 录音
-		startRecord() {
-			console.log('开始录音');
-
-			recorderManager.start();
+		// 录音开始
+		voiceBegin(e) {
+			if (e.touches.length > 1) {
+				return;
+			}
+			this.initPoint.Y = e.touches[0].clientY;
+			this.initPoint.identifier = e.touches[0].identifier;
+			this.RECORDER.start({ format: 'mp3' }); //录音开始,
 		},
-		endRecord() {
-			console.log('录音结束');
-			recorderManager.stop();
+		//录音开始UI效果
+		recordBegin(e) {
+			console.log(132);
+			this.recording = true;
+			this.voiceTis = '松开保存';
+			this.recordLength = 0;
+			this.recordTimer = setInterval(() => {
+				this.recordLength++;
+			}, 1000);
 		},
+		// 录音被打断
+		voiceCancel() {
+			this.recording = false;
+			this.voiceTis = '按住说话';
+			this.recordTis = '手指上滑 取消录音';
+			this.willStop = true; //不发送录音
+			this.RECORDER.stop(); //录音结束
+		},
+		// 录音中(判断是否触发上滑取消发送)
+		voiceIng(e) {
+			if (!this.recording) {
+				return;
+			}
+			let touche = e.touches[0];
+			//上滑一个导航栏的高度触发上滑取消发送
+			if (this.initPoint.Y - touche.clientY >= uni.upx2px(100)) {
+				this.willStop = true;
+				this.recordTis = '松开手指 取消录音';
+			} else {
+				this.willStop = false;
+				this.recordTis = '手指上滑 取消录音';
+			}
+		},
+		// 结束录音
+		voiceEnd(e) {
+			if (!this.recording) {
+				return;
+			}
+			this.recording = false;
+			this.voiceTis = '按住说话';
+			this.recordTis = '手指上滑 取消录音';
+			this.RECORDER.stop(); //录音结束
+		},
+		//录音结束(回调文件)
+		recordEnd(e) {
+			clearInterval(this.recordTimer);
+			if (!this.willStop) {
+				console.log('e: ' + JSON.stringify(e));
+				this.record_path = e.tempFilePath;
+				if (this.record_path != null) {
+					let filePath = e.tempFilePath;
+					uni.uploadFile({
+						url: apiAddres + uploadFile,
+						filePath: filePath,
+						formData: {},
+						success: res => {
+							console.log(res);
+							res.data = JSON.parse(res.data);
+							if (res.data.code == 200) {
+								this.record_path_net = 'http://gasapi.tsingd.cn' + res.data.info;
+								console.log(this.record_path_net);
+							}
+						}
+					});
+				}
+			} else {
+				console.log('取消发送录音');
+			}
+			this.willStop = false;
+		},
+		//播放录音
 		playVoice() {
-			console.log('播放录音');
-			if (this.voicePath) {
-				innerAudioContext.src = this.voicePath;
-				innerAudioContext.play();
-				this.recordingText = '按住开始录音';
+			if (this.record_path) {
+				console.log(this.record_path);
+				if (this.n % 2 == 0) {
+					this.AUDIO.src = this.record_path;
+					this.$nextTick(function() {
+						this.AUDIO.play();
+					});
+					this.n++;
+					console.log('播放录音');
+				}
+				if (this.n % 2 == 1) {
+					this.$nextTick(function() {
+						this.AUDIO.stop();
+					});
+					this.n++;
+				}
 			}
 		},
-		recording() {
-			let n = this.n++;
-			console.log(n);
-			if (n % 3 === 0) {
-				this.recordingText = '正在录音';
-				this.startRecord();
-			}
-			if (n % 3 === 1) {
-				this.recordingText = '录音结束';
-				this.endRecord();
-			}
-			if (n % 3 === 2) {
-				this.recordingText = '播放录音';
-				this.playVoice();
-			}
-		},
+
 		//关闭遮罩层
 		closeEmodeal() {
 			this.visible = false;
@@ -282,13 +381,16 @@ export default {
 		selected(item, index) {
 			console.log(item, index);
 			this.security_check_state = item.value;
+			if (index == 0) {
+				this.$store.state.checkAbnormal = '';
+			}
 			if (index == 1) {
 				this.toAjlonginFive();
 			}
 		},
 		// 选择用户
 		chooseUserInfo(index) {
-			this.checkedUserInfo = index;			
+			this.checkedUserInfo = index;
 			this.user_identity_card_number = this.userInfoList[index].user_identity_card_number;
 		},
 		//选择弹出层确认按钮
@@ -338,52 +440,81 @@ export default {
 				url: './ajloginFive'
 			});
 		},
+		//删除图片
+		async deletePic(index) {
+			let _this = this;
+			console.log(index);
+			uni.showModal({
+				title: '提示',
+				content: '确定删除该图片?',
+				success(res) {
+					console.log(res);
+					if (res.confirm) {
+						for (let i = 0; i < _this.imglist.length; i++) {
+							if (i == index) {
+								_this.imglist.splice(index, 1);
+							}
+						}
+						for (let i = 0; i < _this.photo_path_net.length; i++) {
+							if (i == index) {
+								_this.photo_path_net.splice(index, 1);
+							}
+						}
+						console.log(_this.imglist);
+						console.log(_this.photo_path_net);
+					} else if (res.cancel) {
+						console.log(res.cancel);
+					}
+				}
+			});
+		},
 		// 图片 拍照
 		takePhoto() {
-			let that = this;
+			let _this = this;
+			console.log('cc', _this.imglist);
+			if (_this.imglist.length >= 3) {
+				uni.showModal({
+					title: '提示',
+					content: '最多3张照片',
+					showCancel: false,
+					success: function(res) {
+						if (res.confirm) {
+						} else if (res.cancel) {
+						}
+					}
+				});
+				return;
+			}
 			uni.chooseImage({
 				count: 1, //默认9
 				sizeType: ['original', 'compressed'], //可以指定是原图还是压缩图，默认二者都有
 				sourceType: ['album', 'camera'], //从相册选择
 				success: res => {
 					console.log(res);
-					//这里需要判断一下 当拍摄的照片大于三张的时候就让拍的照片不加载上来
-					if (res.tempFilePaths.length > 3) {
-						that.imglist = that.imglist.concat(JSON.parse(JSON.stringify(res.tempFilePaths))).slice(0, 3);
-						that.photo_path = that.imglist.join(',');
-					} else {
-						if (that.imglist.length < 3) {
-							that.imglist = that.imglist.concat(JSON.parse(JSON.stringify(res.tempFilePaths)));
-							that.photo_path = that.imglist.join(',');
-
-							if (res.tempFilePaths.length > 0) {
-								let filePath = res.tempFilePaths[0];
-								uni.uploadFile({
-									url: apiAddres + uploadFile,
-									filePath: filePath,
-									name: 'file',
-									formData: {},
-									success: res => {
-										console.log(res);
-										res.data = JSON.parse(res.data);
-										console.log(res.data.info);
-										if (res.data.code == 200) {
-											this.photo_path_net.push('http://gasapi.tsingd.cn' + res.data.info);
-											console.log(this.photo_path_net.join(','));
-										}
-									}
-								});
+					console.log(Object.prototype.toString.call(res.tempFilePaths));
+					_this.imglist = _this.imglist.concat(res.tempFilePaths);
+					console.log('123', _this.imglist);
+					_this.photo_path = _this.imglist.join(',');
+					let filePath = res.tempFilePaths[0];
+					uni.uploadFile({
+						url: apiAddres + uploadFile,
+						filePath: filePath,
+						name: 'file',
+						formData: {},
+						success: res => {
+							console.log(res);
+							res.data = JSON.parse(res.data);
+							if (res.data.code == 200) {
+								_this.photo_path_net.push('http://gasapi.tsingd.cn' + res.data.info);
+								console.log(_this.photo_path_net.join(','));
 							}
-						} else {
-							return;
 						}
-					}
+					});
 				},
 				fail: err => {
 					console.log(err);
 				}
 			});
-			console.log('photo_path', this.photo_path);
 		},
 		//通过证件号码/联系方式获取用户信息
 		async getUserInfo() {
@@ -412,8 +543,8 @@ export default {
 							.then(res => {
 								console.log(res);
 								this.lotusLoadingData.isShow = false;
-								if(res[1].data.code == 200) {
-									if(res[1].data.data.length > 0) {
+								if (res[1].data.code == 200) {
+									if (res[1].data.data.length > 0) {
 										this.userInfoList = res[1].data.data;
 										this.user_identity_card_number = res[1].data.data[0].user_identity_card_number;
 										this.verificateUserShow = true;
@@ -463,7 +594,7 @@ export default {
 								console.log(res);
 								this.lotusLoadingData.isShow = false;
 								if (res[1].data.code == 200) {
-									if(res[1].data.data.length > 0) {
+									if (res[1].data.data.length > 0) {
 										this.userInfoList = res[1].data.data;
 										this.user_identity_card_number = res[1].data.data[0].user_identity_card_number;
 										this.verificateUserShow = true;
@@ -474,7 +605,7 @@ export default {
 											icon: 'none',
 											title: '无此用户',
 											duration: 1000
-										})
+										});
 									}
 								}
 								if (res[1].data.code === 400) {
@@ -505,7 +636,7 @@ export default {
 					success: res => {
 						console.log(res);
 						if (res.data.code == 200) {
-							if(res.data.data.length > 0) {
+							if (res.data.data.length > 0) {
 								this.lotusLoadingData.isShow = false;
 								this.userInfoList = res.data.data;
 								this.checkedUserInfo = 0;
@@ -550,20 +681,15 @@ export default {
 		//安检提交请求
 		security() {
 			//安检记录提交校验
-			/* if (this.user_identity_card_number == '' || this.user_identity_card_number == null) {
-				uni.showToast({
-					icon: 'none',
-					title: '请输入客户卡编号',
-					duration: 1000
-				});
-			} */ const value = uni.getStorageSync('isVerification');
-				this.isVerification = value;
-				if(this.isVerification != 'verification') {
-					this.visible = true;
-					this.blurry = true;
-					return;
-				}
-			else if (this.photo_path == null) {
+			const value = uni.getStorageSync(
+				'isVerification'
+			);
+			this.isVerification = value;
+			if (this.isVerification != 'verification') {
+				this.visible = true;
+				this.blurry = true;
+				return;
+			} else if (this.imglist == '' || this.photo_path == []) {
 				uni.showToast({
 					icon: 'none',
 					title: '请上传照片',
@@ -652,7 +778,8 @@ export default {
 };
 </script>
 
-<style lang="less" scoped>
+<style lang="scss" scoped>
+@import '@/static/css/style.scss';
 .commond {
 	// height: 1626rpx;
 	height: 100vh;
@@ -717,14 +844,12 @@ export default {
 
 	.manner {
 		height: 1002rpx;
+		// height: 1100rpx;
 		width: 100%;
-		// border:  1px solid #FFA200;
 		box-sizing: border-box;
-		// margin-top: -140rpx;
-		// padding: 24rpx;
 		.orderInformation {
-			// margin: 0 24rpx 0 24rpx;
 			height: 932rpx;
+			// height: 1050rpx;
 			box-shadow: 0rpx 5rpx 10rpx rgba(0, 64, 128, 0.1);
 			background: rgba(255, 255, 255, 1);
 			display: flex;
@@ -847,7 +972,7 @@ export default {
 					line-height: 80rpx;
 					text-align: center;
 					color: rgba(255, 255, 255, 1);
-					margin: 328rpx 164rpx 56rpx 200rpx;
+					margin: 328rpx 164rpx 56rpx 215rpx;
 				}
 			}
 			.verify {
@@ -897,9 +1022,8 @@ export default {
 	.solution {
 		height: 45rpx;
 		width: 100%;
-		// border: 1px solid #FFA200;
 		display: flex;
-		margin-top: 42rpx;
+		// margin-top: 42rpx;
 		box-sizing: border-box;
 		uni-radio-group {
 			width: 100%;

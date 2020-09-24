@@ -88,19 +88,23 @@ export default {
 	},
 	methods: {
 		//获取当前地理位置
-		getAddress() {
+		async getAddress() {
 			let that = this;
-			uni.getLocation({
+			await uni.getLocation({
 				type: 'wgs84',
 				geocode: true,
-				success: res => {
+				/* success: res => {
 					console.log('当前位置的经度：' + res.longitude);
 					console.log('当前位置的纬度：' + res.latitude);
 					console.log(res.address.district);
 					that.site = res.address.district;
 					console.log(that.site);
-				}
-			});
+				} */
+			}).then(res=> {
+				console.log(res)
+				that.site = res[1].address.district;
+				console.log(that.site);
+			})
 		},
 		//通过手机号查询
 		toSearch() {

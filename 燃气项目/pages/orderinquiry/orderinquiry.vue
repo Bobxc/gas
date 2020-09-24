@@ -19,7 +19,7 @@
 		<view class="orderInformation">
 			<view class="titl">
 				<p class="left">订单查询</p>
-				<p class="right">共计:{{ cardlists.length }}个</p>
+				<p class="right">共计:{{ this.total }}个</p>
 			</view>
 			<view class="calendar">
 				<span>起</span>
@@ -52,8 +52,30 @@
 			</view>
 		</view>
 		<!-- 分页 -->
-		<view class="content" style="margin-top: -20px;">
-			<paging background="#E8EEFF" color="#000000" :total="total" activecolor="#ffffff" activebackground="#0045FF" :pageSize="2" v-model="curren" @changes="dd"></paging>
+		<view style="display: flex;">
+		<view class="content" style="width: 710rpx; height: 120rpx; display: flex; align-items: center; background-color: #fff; margin: 0 auto; border-radius: 20rpx;">
+			<!-- <paging background="#E8EEFF" color="#000000" :total="total" activecolor="#ffffff" activebackground="#0045FF" :pageSize="2" v-model="curren" @changes="dd"></paging> -->
+			<paging
+				:total="total"
+				:pageSize="this.pageSize"
+				background="#e8eeff"
+				color="#000000"
+				activecolor="#ffffff"
+				activebackground="#0045ff"
+				:first="false"
+				v-model="pageNo"
+				@changes="dd"
+				@goPage = "goPage"
+			>
+				<template slot="arrow-left">
+					<uni-icons type="arrowleft" size="15" color="#0045ff" background="#e8eeff" style="font-weight: 900;"></uni-icons>
+				</template>
+				<template slot="arrow-right">
+					<uni-icons type="arrowright" size="15" color="#0045ff" background="#e8eeff" style="font-weight: 900;"></uni-icons>
+				</template>
+			</paging>
+		</view>
+		
 		</view>
 		<!-- 加载动画 -->
 		<LotusLoading :lotusLoadingData="lotusLoadingData"></LotusLoading>
@@ -63,7 +85,7 @@
 <script>
 import { apiAddres, statistics } from '../../common/common.js';
 import wCalendar from '../../components/w-calendar/w-calendar.vue';
-import paging from '../../components/yang-paging/fy.vue';
+import paging from '../../components/yang-paging/yang-paging.vue';
 import LotusLoading from '../../components/Winglau14-lotusLoading/Winglau14-LotusLoading.vue';
 import ruiDatePicker from '../../components/rattenking-dtpicker/rattenking-dtpicker.vue';
 export default {
@@ -73,13 +95,13 @@ export default {
 		LotusLoading
 	},
 	onLoad() {
-		const loginData = uni.getStorageSync('loginData')
-		console.log(loginData)
-		this.role_type_id = loginData.role_type_id
-		this.token = loginData.F_token
+		const loginData = uni.getStorageSync('loginData');
+		console.log(loginData);
+		this.role_type_id = loginData.role_type_id;
+		this.token = loginData.F_token;
 		this.GetOrderInfoByCorpDispatcher();
 	},
-	
+
 	data() {
 		return {
 			lotusLoadingData: {
@@ -93,18 +115,19 @@ export default {
 			isShow: false,
 			cardlists: [],
 			role_type_id: '',
-			dispatcher_number: '1002640',
-			curren: 1,
-			total: 100
+			current: '',
+			total: 0,
+			pageNo: 1,
+			pageSize: 2
 		};
 	},
 	//手机物理返回键
 	onBackPress(options) {
-		if(options.from === 'navigateBack') {
-			return false
+		if (options.from === 'navigateBack') {
+			return false;
 		}
-		this.toBack()
-		return true
+		this.toBack();
+		return true;
 	},
 	methods: {
 		GetOrderInfoByCorpDispatcher() {
@@ -116,31 +139,41 @@ export default {
 				header: {},
 				data: {
 					token: this.token,
-					dispatcher_number: this.dispatcher_number,
 					start_time: this.value1,
-					end_time: this.value2
+					end_time: this.value2,
+					pageNo: this.pageNo,
+					pageSize: this.pageSize
 				},
 				success: res => {
-					console.log(res)
+					console.log(res);
+					
 					this.lotusLoadingData.isShow = false;
+					if(res.data.code == 200) {
+						this.total = res.data.data.total;
+						this.cardlists = res.data.data.result;
+					}
 					//强制渲染
-					this.$nextTick(() => {
-						this.cardlists = res.data.data;
-						// this.total = this.cardlists.length;
-					});
+					// this.$nextTick(() => {
+					// 	this.cardlists = res.data.data;
+					// });
 				}
 			});
 		},
 		//分页按钮
 		dd(index) {
 			console.log(index);
-			// this.curren = index
+			this.pageNo = index;
+			this.GetOrderInfoByCorpDispatcher();
+		},
+		//输入页数查询
+		goPage(val) {
+			console.log("123",val)
+			this.pageNo = val;
+			this.GetOrderInfoByCorpDispatcher();
 		},
 		//返回主页
 		toBack() {
-			uni.navigateBack({
-				delta: 1
-			})
+			uni.navigateBack({});
 		},
 		//送气工订单查询
 		bindChange1(value) {
@@ -331,20 +364,22 @@ export default {
 
 .bottom_information {
 	// height: 1000rpx;
-	height: 61vh;
+	// height: 61vh;
+	height: calc(100vh - 600rpx);
 	width: 750rpx;
 	box-sizing: border-box;
 	padding: 0rpx 24rpx 24rpx 24rpx;
 	margin-top: -60rpx;
 	.content {
-		// height:900rpx;
-		height: 96%;
+		// height: 96%;
+		height: calc(100vh - 650rpx);
 		box-shadow: 0rpx 5rpx 10rpx rgba(0, 64, 128, 0.04);
 		opacity: 1;
 		border-radius: 0rpx 0rpx 16rpx 16rpx;
 		overflow: scroll;
 		background: rgba(255, 255, 255, 1);
 		padding: 20rpx;
+		padding-bottom: 10rpx;
 	}
 	.cardlist {
 		// width: 654rpx;

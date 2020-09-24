@@ -133,7 +133,7 @@ export default {
 					if (res.data.code == 400) {
 						uni.showToast({
 							icon: 'none',
-							title: '没有当前用户,请重新登录',
+							title: res.data.info,
 							duration: 1000
 						});
 					} else {

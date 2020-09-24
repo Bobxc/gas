@@ -137,202 +137,36 @@ export default {
 			});
 		},
 		//获取地理位置
-		getAddress() {
+		async getAddress() {
 			let that = this;
-			uni.getLocation({
-				type: 'wgs84',
-				geocode: true,
-				success: res => {
+			await uni
+				.getLocation({
+					type: 'wgs84',
+					geocode: true
+					/* success: res => {
 					console.log('当前位置的经度：' + res.longitude);
 					console.log('当前位置的纬度：' + res.latitude);
 					console.log(res.address.district);
 					that.site = res.address.district;
 					console.log(that.site);
-				}
-			});
+				} */
+				})
+				.then(res => {
+					console.log(res);
+					that.site = res[1].address.district;
+				});
+			console.log('位置', that.site);
 		},
 		//跳转操作记录
 		toOperation() {
 			uni.navigateTo({
 				url: '../truckcar/operation'
-			})
+			});
 		},
 		tolever(path, key) {
 			uni.navigateTo({
 				url: path
 			});
-			//扫码 满瓶入库
-			/* if (key == 0) {
-				uni.scanCode({
-					onlyFromCamera: false,
-					scanType: ['qrCode'],
-					success: res => {
-						let src = res.result.split('/');
-						this.data = src[src.length - 1]; // 6013213724  123
-						//扫码成功发送请求	 字符串的格式
-						var data = JSON.stringify({
-							gasLabelNumber: this.data
-						});
-						// console.log(data)
-						//这里判断data（扫码是一个还是多个） 是多个就存到data里面
-						if (this.arrs.length > 1) {
-							for (let i in arrs) {
-								if (arrs[i].gasLabelNumber != data.gasLabelNumber) {
-									data += ',' + this.data; //以对象的方式进行传值
-								}
-							}
-						} else {
-							data;
-						}
-						let parm = {
-							token: this.token,
-							loginMark: this.loginMark,
-							data: data
-						};
-						parm = JSON.stringify(parm);
-						// console.log(parm)
-						uni.request({
-							url: apiAddres + Fullsupply,
-							header: {
-								'Content-Type': 'application/json'
-							},
-							method: 'POST',
-							data: parm,
-							success: res => {
-								console.log(res);
-								if (res.data.code == 200) {
-									uni.showToast({
-										icon: 'success',
-										title: '满瓶入库成功',
-										duration: 1000
-									});
-								}
-								if (res.data.code == 400) {
-									uni.showToast({
-										icon: 'none',
-										title: '气瓶与当前责任主体类型不匹配【气瓶123】',
-										duration: 2000
-									});
-								}
-							}
-						});
-					}
-				});
-			}
-			//空瓶入库
-			if (key == 1) {
-				uni.scanCode({
-					onlyFromCamera: false,
-					scanType: ['qrCode'],
-					success: res => {
-						let src = res.result.split('/');
-						this.data = src[src.length - 1]; // 6013213724  123
-						//扫码成功发送请求	 字符串的格式
-						var data = JSON.stringify({
-							gasLabelNumber: this.data
-						});
-						//这里判断data（扫码是一个还是多个） 是多个就存到data里面
-						// this.data.push(data);
-						if (this.arrs.length > 1) {
-							for (let i in arrs) {
-								if (arrs[i].gasLabelNumber != data.gasLabelNumber) {
-									data += ',' + this.data; //以对象的方式进行传值
-								}
-							}
-						} else {
-							data;
-						}
-						let parm = {
-							token: this.token,
-							loginMark: this.loginMark,
-							data: data
-						};
-						parm = JSON.stringify(parm);
-						console.log(parm);
-						uni.request({
-							url: apiAddres + Empty,
-							header: {
-								'Content-Type': 'application/json'
-							},
-							method: 'POST',
-							data: parm,
-							success: res => {
-								console.log(res);
-								if (res.data.code == 200) {
-									uni.showToast({
-										icon: 'success',
-										title: '空瓶入库成功',
-										duration: 1000
-									});
-								}
-								if (res.data.code == 400) {
-									uni.showToast({
-										icon: 'none',
-										title: '无法找到气瓶状态更改类型【气瓶：123】',
-										duration: 2000
-									});
-								}
-							}
-						});
-					}
-				});
-			}
-			if (key == 2) {
-				uni.scanCode({
-					onlyFromCamera: false,
-					scanType: ['qrCode'],
-					success: res => {
-						let src = res.result.split('/');
-						this.data = src[src.length - 1]; // 6013213724  123
-						//扫码成功发送请求	 字符串的格式
-						var data = JSON.stringify({
-							gasLabelNumber: this.data
-						});
-						//这里判断data（扫码是一个还是多个） 是多个就存到data里面
-						// this.data.push(data);
-						if (this.arrs.length > 1) {
-							for (let i in arrs) {
-								if (arrs[i].gasLabelNumber != data.gasLabelNumber) {
-									data += ',' + this.data; //以对象的方式进行传值
-								}
-							}
-						} else {
-							data;
-						}
-						let parm = {
-							token: this.token,
-							loginMark: this.loginMark,
-							data: data
-						};
-						parm = JSON.stringify(parm);
-						uni.request({
-							url: apiAddres + EmptyTo,
-							header: {
-								'Content-Type': 'application/json'
-							},
-							method: 'POST',
-							data: parm,
-							success: res => {
-								console.log(res);
-								if (res.data.code == 200) {
-									uni.showToast({
-										icon: 'success',
-										title: '空瓶出库成功',
-										duration: 1000
-									});
-								}
-								if (res.data.code == 400) {
-									uni.showToast({
-										icon: 'none',
-										title: '气瓶现有责任主体类型无法使气瓶转为空【气瓶：123】',
-										duration: 2000
-									});
-								}
-							}
-						});
-					}
-				});
-			} */
 		},
 		//自提
 		toweixinOrder(index, paths) {

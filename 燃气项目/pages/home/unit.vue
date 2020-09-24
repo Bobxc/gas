@@ -210,10 +210,10 @@ export default {
 		},
 		//选择所在地区
 		handleGetRegion(region) {
+			console.log(region)
 			this.region = region;
-			console.log(this.region);
 			this.delivery_region_name = this.region[0].name + this.region[1].name + this.region[2].name;
-			this.delivery_region_id = this.region[0].code + this.region[1].code + this.region[2].code;
+			this.delivery_region_id = this.region[2].code;
 			console.log(this.delivery_region_id);
 		},
 		//添加证件照片（正面）
@@ -488,17 +488,57 @@ export default {
 								title: '新增成功',
 								duration: 1000
 							});
+							setTimeout(()=>{
+								if (this.role_type_id == 7) {
+									uni.navigateTo({
+										url: '../test/test'
+									});
+								}
+								if (this.role_type_id == 6) {
+									uni.navigateTo({
+										url: '../home/index'
+									});
+								}
+								if (this.role_type_id == 5) {
+									uni.navigateTo({
+										url: '../home/supply'
+									});
+								}
+							},1000)
 						}
-						if (res.data.code === 400) {
-							uni.showToast({
-								icon: 'none',
-								title: '添加失败',
-								duration: 1000
-							});
+						if (res.data.code == 400) {
+							if(res.data.info == 'CertificateExist') {
+								uni.showToast({
+									icon: 'none',
+									title: '证件已注册',
+									duration: 1000
+								})
+							}
+							if(res.data.info == 'UserIdentityCardNumberUsed') {
+								uni.showToast({
+									icon: 'none',
+									title: '客户卡编号已被使用',
+									duration: 1000
+								})
+							}
+							if(res.data.info == 'CertificateExist') {
+								uni.showToast({
+									icon: 'none',
+									title: '身份证号已存在',
+									duration: 1000
+								})
+							}
+							if(res.data.info == 'UserIdentityCardNumberNonExist') {
+								uni.showToast({
+									icon: 'none',
+									title: '客户卡编号不已存在',
+									duration: 1000
+								})
+							}
 						}
 					}
 				});
-				if (this.role_type_id == 4 || this.role_type_id == 7) {
+				/* if (this.role_type_id == 7) {
 					uni.navigateTo({
 						url: '../test/test'
 					});
@@ -512,7 +552,7 @@ export default {
 					uni.navigateTo({
 						url: '../home/supply'
 					});
-				}
+				} */
 			}
 		}
 	}

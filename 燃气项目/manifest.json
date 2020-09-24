@@ -1,5 +1,5 @@
 {
-    "name" : "ranqi",
+    "name" : "燃气",
     "appid" : "__UNI__D3CE6DF",
     "description" : "燃气项目",
     "versionName" : "1.0.0",
@@ -42,7 +42,12 @@
             },
             "ios" : {},
             "sdkConfigs" : {
-                "maps" : {},
+                "maps" : {
+                    "amap" : {
+                        "appkey_ios" : "017ba3a1dbd82845add638fa97539af7",
+                        "appkey_android" : "017ba3a1dbd82845add638fa97539af7"
+                    }
+                },
                 "ad" : {}
             },
             "icons" : {
