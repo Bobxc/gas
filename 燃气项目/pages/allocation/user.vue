@@ -145,7 +145,7 @@
 									</li>
 									<li>
 										<span class="spanLeft">证件编号：</span>
-										<span class="spanRight">{{ item.user_identity_card_number }}</span>
+										<span class="spanRight">{{ item.certificate_id }}</span>
 									</li>
 									<li>
 										<span class="spanLeft">联系人：</span>
@@ -165,9 +165,9 @@
 											size="16"
 											color="#108ee9"
 											v-if="checkedUserInfo == index"
-											style="position: absolute; top: 28rpx; right: 20rpx;"
+											style="position: absolute; top: 40rpx; right: 20rpx;"
 										></uni-icons>
-										<uni-icons type="circle" size="16" color="#108ee9" v-else style="position: absolute; top: 28rpx; right: 20rpx;"></uni-icons>
+										<uni-icons type="circle" size="16" color="#108ee9" v-else style="position: absolute; top: 40rpx; right: 20rpx;"></uni-icons>
 									</template>
 								</evan-radio>
 							</evan-radio-group>
@@ -178,7 +178,7 @@
 			</e-modal>
 		</view>
 		<!-- 客户卡编号验证用户 -->
-		<e-modal class="userListModal" :visible.sync="verificateUserByCardNum" width="90%">
+		<!-- <e-modal class="userListModal" :visible.sync="verificateUserByCardNum" width="90%">
 			<view class="userList" style="height: 80vh; padding: 20rpx;">
 				<view class="userTitle"><span>身份识别</span></view>
 				<view class="userContent">
@@ -195,7 +195,7 @@
 								</li>
 								<li>
 									<span class="spanLeft">证件编号：</span>
-									<span class="spanRight">{{ item.user_identity_card_number }}</span>
+									<span class="spanRight">{{ item.certificate_id }}</span>
 								</li>
 								<li>
 									<span class="spanLeft">联系人：</span>
@@ -225,7 +225,7 @@
 				</view>
 				<button class="userBtn" type="default" @click="userBtnByCard">确定</button>
 			</view>
-		</e-modal>
+		</e-modal> -->
 		<LotusLoading :lotusLoadingData="lotusLoadingData"></LotusLoading>
 	</view>
 </template>
@@ -314,23 +314,26 @@ export default {
 			this.keyWord = '';
 			this.user_name = '';
 			this.usertype = '';
+			this.card_number = '';
 			this.principal = '';
 			this.phone = '';
 			this.user_identity_card_number = '';
 			this.delivery_address = '';
 			this.keyNumber = '';
+			this.userInfoList = [];
 			this.current = evt;
 			console.log(this.current);
 		},
 		//选择弹出层用户信息
 		chooseUserInfo(index) {
+			console.log(index)
 			this.checkedUserInfo = index;
-			this.user_name = this.userInfoList[index].user_name;
-			this.usertype = this.userInfoList[index].usertype;
-			this.principal = this.userInfoList[index].principal;
-			this.phone = this.userInfoList[index].phone;
+			// this.user_name = this.userInfoList[index].user_name;
+			// this.usertype = this.userInfoList[index].usertype;
+			// this.principal = this.userInfoList[index].principal;
+			// this.phone = this.userInfoList[index].phone;
 			this.keyNumber = this.userInfoList[index].user_identity_card_number;
-			this.delivery_address = this.userInfoList[index].delivery_address;
+			// this.delivery_address = this.userInfoList[index].delivery_address;
 		},
 		//选择弹出层确认按钮
 		userBtn() {
@@ -352,6 +355,13 @@ export default {
 							duration: 2000
 						});
 						this.user_number = res.data.data[0].user_number;
+						this.usertype = res.data.data[0].user_type_name;
+						this.user_name = res.data.data[0].user_name;
+						this.card_number = res.data.data[0].certificate_id;
+						this.principal = res.data.data[0].principal;
+						this.phone = res.data.data[0].phone;
+						this.delivery_address = res.data.data[0].address;
+						
 						uni.setStorage({
 							key: 'isVerification',
 							data: 'verification',
@@ -688,6 +698,7 @@ export default {
 			if (this.keyWord != '') {
 				this.user_name = '';
 				this.usertype = '';
+				this.card_number = '';
 				this.principal = '';
 				this.phone = '';
 				this.keyNumber = '';
@@ -720,12 +731,12 @@ export default {
 									if (res.data.data.length > 0) {
 										this.userInfoList = res.data.data;
 										this.checkedUserInfo = 0;
-										this.user_name = this.userInfoList[0].user_name;
-										this.usertype = this.userInfoList[0].usertype;
-										this.principal = this.userInfoList[0].principal;
-										this.phone = this.userInfoList[0].phone;
+										// this.user_name = this.userInfoList[0].user_name;
+										// this.usertype = this.userInfoList[0].usertype;
+										// this.principal = this.userInfoList[0].principal;
+										// this.phone = this.userInfoList[0].phone;
 										this.keyNumber = this.userInfoList[0].user_identity_card_number;
-										this.delivery_address = this.userInfoList[0].delivery_address;
+										// this.delivery_address = this.userInfoList[0].delivery_address;
 										this.verificateUser = true;
 									} else {
 										this.verificateUser = false;
@@ -774,12 +785,12 @@ export default {
 									if (res.data.data.length > 0) {
 										this.userInfoList = res.data.data;
 										this.checkedUserInfo = 0;
-										this.user_name = this.userInfoList[0].user_name;
-										this.usertype = this.userInfoList[0].usertype;
-										this.principal = this.userInfoList[0].principal;
-										this.phone = this.userInfoList[0].phone;
+										// this.user_name = this.userInfoList[0].user_name;
+										// this.usertype = this.userInfoList[0].usertype;
+										// this.principal = this.userInfoList[0].principal;
+										// this.phone = this.userInfoList[0].phone;
 										this.keyNumber = this.userInfoList[0].user_identity_card_number;
-										this.delivery_address = this.userInfoList[0].delivery_address;
+										// this.delivery_address = this.userInfoList[0].delivery_address;
 										this.verificateUser = true;
 									} else {
 										this.verificateUser = false;
@@ -801,6 +812,7 @@ export default {
 		//输入客户卡编号验证用户
 		leave() {
 			if (this.keyNumber != '') {
+				console.log("keyNumber",typeof this.keyNumber)
 				this.user_type_name = '';
 				this.usertype = '';
 				this.principal = '';
@@ -822,19 +834,23 @@ export default {
 						this.lotusLoadingData.isShow = false;
 						if (res.data.code == 200) {
 							if (res.data.data.length > 0) {
-								this.userInfoList = res.data.data;
+								// this.userInfoList = res.data.data;
 								this.checkedUserInfo = 0;
 								if (this.current == 0) {
-									this.keyWord = this.userInfoList[0].certificate_id;
+									// this.keyWord = this.userInfoList[0].certificate_id;
+									this.keyWord = res.data.data[0].certificate_id;
 								}
 								if (this.current == 1) {
-									this.keyWord = this.userInfoList[0].phone;
+									// this.keyWord = this.userInfoList[0].phone;
+									this.keyWord = res.data.data[0].phone;
 								}
-								this.user_name = this.userInfoList[0].user_name;
-								this.usertype = this.userInfoList[0].user_type_name;
-								this.principal = this.userInfoList[0].principal;
-								this.keyNumber = this.userInfoList[0].user_identity_card_number;
-								this.delivery_address = this.userInfoList[0].address;
+								this.user_number = res.data.data[0].user_number;
+								this.usertype = res.data.data[0].user_type_name;
+								this.card_number = res.data.data[0].certificate_id;
+								this.phone = res.data.data[0].phone;
+								this.user_name = res.data.data[0].user_name;
+								this.principal = res.data.data[0].principal;
+								this.delivery_address = res.data.data[0].address;
 								uni.setStorage({
 									key: 'isVerification',
 									data: 'verification',
@@ -842,18 +858,25 @@ export default {
 										console.log('isVerification: verification');
 									}
 								});
-								this.verificateUserByCardNum = true;
+								uni.showToast({
+									icon: 'none',
+									title: '验证成功',
+									duration: 1500
+								})
+								// this.verificateUserByCardNum = true;
 							} else {
 								this.keyWord = '';
 								this.user_name = '';
 								this.usertype = '';
 								this.principal = '';
+								this.card_number = '';
 								this.delivery_address = '';
-								this.verificateUserByCardNum = false;
+								this.phone = '';
+								// this.verificateUserByCardNum = false;
 								uni.showToast({
 									icon: 'none',
-									title: '无此用户',
-									duration: 1000
+									title: '验证失败',
+									duration: 1500
 								});
 								return;
 							}
@@ -1419,12 +1442,13 @@ body {
 
 		ul {
 			border-top: 2rpx solid rgb(228, 228, 228);
+			padding-top: 36rpx;
 			padding-bottom: 30rpx;
 			li {
 				width: 100%;
 				height: 90rpx;
 				display: flex;
-				align-items: center;
+				// align-items: center;
 				font-size: 32rpx;
 				.spanLeft {
 					width: 260rpx;

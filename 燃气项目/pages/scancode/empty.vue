@@ -175,6 +175,7 @@ export default {
 			}
 			console.log('result=', result);
 			let src = result.split('/');
+			console.log(src[src.length - 1])
 			this.gas_label_number = src[src.length - 1];
 
 			//扫码获取燃气瓶类型

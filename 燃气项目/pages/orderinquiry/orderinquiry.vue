@@ -240,9 +240,7 @@ export default {
 		bindCancel2() {
 			console.log(222);
 		},
-		toMyself() {
-			console.log(333);
-		}
+		toMyself() {}
 	}
 };
 </script>

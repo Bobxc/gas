@@ -1,47 +1,51 @@
 <template>
 	<!-- 登录页面 -->
-	<view class="box">
-		<view class="login"><image src="../../static/image/log.png" mode="" class="image"></image></view>
+	<view>
+		<view class="box">
+			<view class="login"><image src="../../static/image/log.png" mode="" class="image"></image></view>
+			<view class="user">
+				<div class="inputLogo">
+					<span><image src="../../static/image/roundperson.png" mode=""></image></span>
+				</div>
+				<input class="toInput" type="text" value="username" v-model="username" maxlength="20" placeholder="请输入用户名" />
+				<div class="statrc"></div>
+			</view>
 
-		<view class="user">
-			<div class="inputLogo">
-				<span><image src="../../static/image/roundperson.png" mode=""></image></span>
-			</div>
-			<input class="toInput" type="text" value="username" v-model="username" maxlength="20" placeholder="请输入用户名" />
-			<div class="statrc"></div>
+			<p class="tip">{{ msg }}</p>
+			<view class="password">
+				<div class="inputLogo">
+					<span><image src="../../static/image/roundvpnkey.png" mode=""></image></span>
+				</div>
+				<input
+					class="toInput"
+					:type="flag"
+					value="password"
+					@click="hidden"
+					v-model="password"
+					@blur="leave"
+					maxlength="16"
+					placeholder="请输入密码"
+					style="color: grey; font-size: 16px;"
+				/>
+				<div @click="isAnsol" v-if="flag == 'password'" class="statrc" style="display: flex; align-items: center; justify-content: center;">
+					<!-- <image src="../../static/image/close.png" style="width: 44rpx; height: 44rpx;"></image> -->
+				</div>
+				<div @click="isAnsol" v-else class="statrc" style="display: flex; align-items: center; justify-content: center;">
+					<!-- <image src="../../static/image/open.png" style="width: 44rpx; height: 44rpx;"></image> -->
+				</div>
+			</view>
+			<button class="register" @click="toEnter()">登录</button>
+
+			<view class="bot"><image src="../../static/image/waimai1.png" mode=""></image></view>
 		</view>
-
-		<p class="tip">{{ msg }}</p>
-		<view class="password">
-			<div class="inputLogo">
-				<span><image src="../../static/image/roundvpnkey.png" mode=""></image></span>
-			</div>
-			<input
-				class="toInput"
-				:type="flag"
-				value="password"
-				@click="hidden"
-				v-model="password"
-				@blur="leave"
-				maxlength="16"
-				placeholder="请输入密码"
-				style="color: grey; font-size: 16px;"
-			/>
-			<div @click="isAnsol" v-if="flag == 'password'" class="statrc" style="display: flex; align-items: center; justify-content: center;">
-				<!-- <image src="../../static/image/close.png" style="width: 44rpx; height: 44rpx;"></image> -->
-			</div>
-			<div @click="isAnsol" v-else class="statrc" style="display: flex; align-items: center; justify-content: center;">
-				<!-- <image src="../../static/image/open.png" style="width: 44rpx; height: 44rpx;"></image> -->
-			</div>
-		</view>
-		<button class="register" @click="toEnter()">登录</button>
-
-		<view class="bot"><image src="../../static/image/waimai1.png" mode=""></image></view>
+		<LotusLoading :lotusLoadingData="lotusLoadingData"></LotusLoading>
 	</view>
 </template>
 <script>
 import { apiAddres, login } from '../../common/common.js';
+import LotusLoading from '../../components/Winglau14-lotusLoading/Winglau14-LotusLoading.vue';
 export default {
+	components: { LotusLoading },
 	data() {
 		return {
 			windowHeight: '',
@@ -57,7 +61,10 @@ export default {
 			url: '',
 			F_token: '',
 			organization_id: '  ',
-			F_loginMark: ''
+			F_loginMark: '',
+			lotusLoadingData: {
+				isShow: false //设置显示加载中组件true显示false隐藏
+			}
 		};
 	},
 	onLoad() {
@@ -115,6 +122,7 @@ export default {
 		},
 		// 登录各个页面
 		login(router) {
+			this.lotusLoadingData.isShow = true;
 			uni.request({
 				url: apiAddres + login,
 				//post 请求 配置请求头
@@ -131,12 +139,14 @@ export default {
 				success: res => {
 					console.log('123', res);
 					if (res.data.code == 400) {
+						this.lotusLoadingData.isShow = false;
 						uni.showToast({
 							icon: 'none',
 							title: res.data.info,
 							duration: 1000
 						});
 					} else {
+						this.lotusLoadingData.isShow = false;
 						let {
 							data: {
 								data: {
@@ -183,80 +193,9 @@ export default {
 										url: '../test/test'
 									});
 								}
-								if (role_type_id == 4) {
-									//储配站页面
-
-									uni.reLaunch({
-										url: '../test/test?' + 'F_token=' + F_token + '&&' + 'F_loginMark=' + F_loginMark
-									});
-								}
 							}
 						});
 					}
-					// 	let {
-					// 		data:{
-					// 			data:{
-					// 				sysUser:{
-					// 					phone,
-					// 					realname,
-					// 					role_type_id,
-					// 					user_id,
-					// 					username,
-
-					// 				},
-					// 				token:{
-					// 					F_token,
-					// 					F_tokenid,
-					// 				    F_loginMark,
-					// 					F_logTime,
-					// 					F_status
-					// 				}
-					// 			}
-					// 		}
-					// 	} = res;
-					// 	let obj = {
-					// 		phone:phone,
-					// 		realname:realname,
-					// 		role_type_id:role_type_id,
-					// 		user_id:user_id,
-					// 		username:username,
-					// 		F_token:F_token,
-					// 		F_tokenid:F_tokenid,
-					// 		F_loginMark:F_loginMark,
-					// 		F_logTime:F_logTime,
-					// 		F_status:F_status
-					// 	}
-					//        // 将值保存在sessionStorage中	 本地储存
-					// 	uni.setStorage({
-					// 	    key: "loginData",
-					// 	    data: obj,
-					//     success:(res)=>{
-					// 		uni.request({
-					// 			url:router
-					// 		})
-					// 	  if(role_type_id==6){  //送气工页面
-					// 		  uni.reLaunch({
-					// 		  	url:router
-					// 		  })
-					// 	  }
-					// 	  if(role_type_id==5){  //供气站页面
-					// 		  uni.reLaunch({
-					// 		  	url:'../home/supply'
-					// 		  })
-					// 	  }
-					// 	  if(role_type_id==7){  //储配站页面
-					// 		  uni.reLaunch({
-					// 		  	url:'../test/test',
-					// 		  })
-					// 	  }
-					// 	  if(role_type_id==4){ //储配站页面
-
-					// 		  uni.reLaunch({
-					// 		    url: '../test/test?'+'F_token='+F_token+'&&'+'F_loginMark='+F_loginMark
-					// 		  })
-					// 	  }
-					//   }
-					// });
 				},
 				fail: err => {
 					console.log('失败');

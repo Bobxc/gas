@@ -117,7 +117,7 @@
 									</li>
 									<li>
 										<span class="spanLeft">证件编号：</span>
-										<span class="spanRight">{{ item.user_identity_card_number }}</span>
+										<span class="spanRight">{{ item.certificate_id }}</span>
 									</li>
 									<li>
 										<span class="spanLeft">联系人：</span>
@@ -137,9 +137,9 @@
 											size="16"
 											color="#108ee9"
 											v-if="checkedUserInfo == index"
-											style="position: absolute; top: 28rpx; right: 20rpx;"
+											style="position: absolute; top: 40rpx; right: 20rpx;"
 										></uni-icons>
-										<uni-icons type="circle" size="16" color="#108ee9" v-else style="position: absolute; top: 28rpx; right: 20rpx;"></uni-icons>
+										<uni-icons type="circle" size="16" color="#108ee9" v-else style="position: absolute; top: 40rpx; right: 20rpx;"></uni-icons>
 									</template>
 								</evan-radio>
 							</evan-radio-group>
@@ -432,6 +432,9 @@ export default {
 		//验证方式切换  身份证/联系方式验证
 		radioChange(evt) {
 			this.current = evt;
+			this.phone = '';
+			this.certificate_id = '';
+			this.user_identity_card_number = '';
 			console.log(this.current);
 		},
 		//跳转到燃气瓶安检异常情况汇总
@@ -546,6 +549,7 @@ export default {
 								if (res[1].data.code == 200) {
 									if (res[1].data.data.length > 0) {
 										this.userInfoList = res[1].data.data;
+										this.checkedUserInfo = 0;
 										this.user_identity_card_number = res[1].data.data[0].user_identity_card_number;
 										this.verificateUserShow = true;
 									} else {
@@ -596,6 +600,7 @@ export default {
 								if (res[1].data.code == 200) {
 									if (res[1].data.data.length > 0) {
 										this.userInfoList = res[1].data.data;
+										this.checkedUserInfo = 0;
 										this.user_identity_card_number = res[1].data.data[0].user_identity_card_number;
 										this.verificateUserShow = true;
 									} else {
@@ -638,13 +643,19 @@ export default {
 						if (res.data.code == 200) {
 							if (res.data.data.length > 0) {
 								this.lotusLoadingData.isShow = false;
-								this.userInfoList = res.data.data;
-								this.checkedUserInfo = 0;
-								if (this.current == 0) {
-									this.certificate_id = this.userInfoList[0].certificate_id;
+								// this.userInfoList = res.data.data;
+								// this.checkedUserInfo = 0;
+								// if (this.current == 0) {
+								// 	this.certificate_id = this.userInfoList[0].certificate_id;
+								// }
+								// if (this.current == 1) {
+								// 	this.phone = this.userInfoList[0].phone;
+								// }
+								if(this.current == 0) {
+									this.certificate_id = res.data.data[0].certificate_id;
 								}
-								if (this.current == 1) {
-									this.phone = this.userInfoList[0].phone;
+								if(this.current == 1) {
+									this.phone = res.data.data[0].phone;
 								}
 								uni.setStorage({
 									key: 'isVerification',
@@ -653,7 +664,12 @@ export default {
 										console.log('isVerification: verification');
 									}
 								});
-								this.verificateUserShow = true;
+								uni.showToast({
+									icon: 'none',
+									title: '验证成功',
+									duration: 1500
+								})
+								// this.verificateUserShow = true;
 							} else {
 								this.lotusLoadingData.isShow = false;
 								this.certificate_id = '';
@@ -857,7 +873,7 @@ export default {
 			border-radius: 16rpx;
 			position: relative;
 			.paishe {
-				width: 200rpx;
+				width: 220rpx;
 				font-size: 20rpx;
 				color: #ff0000;
 				position: absolute;
@@ -1137,6 +1153,50 @@ export default {
 .blurry {
 	filter: blur(20rpx);
 }
+// .userList {
+// 	background-color: rgb(245, 247, 255);
+// 	border-radius: 20rpx;
+// 	height: 100%;
+// 	overflow: hidden;
+// 	.userTitle {
+// 		width: 100%;
+// 		height: 100rpx;
+// 		display: flex;
+// 		justify-content: center;
+// 		align-items: center;
+// 		font-weight: 1000;
+// 	}
+// 	.userContent {
+// 		height: calc(100vh - 550rpx);
+// 		// overflow: scroll;
+// 		overflow: auto;
+
+// 		ul {
+// 			border-top: 2rpx solid rgb(228, 228, 228);
+// 			padding-bottom: 30rpx;
+// 			li {
+// 				width: 100%;
+// 				height: 90rpx;
+// 				display: flex;
+// 				// align-items: center;
+// 				font-size: 32rpx;
+// 				.spanLeft {
+// 					width: 260rpx;
+// 				}
+// 				.spanRight {
+// 					width: 100%;
+// 				}
+// 			}
+// 		}
+// 	}
+// 	.userBtn {
+// 		width: 500rpx;
+// 		color: #fff;
+// 		background-color: rgb(0, 110, 255);
+// 		margin: 20rpx auto;
+// 	}
+// }
+
 .userList {
 	background-color: rgb(245, 247, 255);
 	border-radius: 20rpx;
@@ -1157,12 +1217,13 @@ export default {
 
 		ul {
 			border-top: 2rpx solid rgb(228, 228, 228);
+			padding-top: 36rpx;
 			padding-bottom: 30rpx;
 			li {
 				width: 100%;
 				height: 90rpx;
 				display: flex;
-				align-items: center;
+				// align-items: center;
 				font-size: 32rpx;
 				.spanLeft {
 					width: 260rpx;

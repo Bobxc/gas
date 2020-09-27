@@ -48,13 +48,6 @@
 				"navigationBarTitleText": ""
 			}
 		},
-
-		{
-			"path": "pages/login/register",
-			"style": {
-				"navigationBarTitleText": ""
-			}
-		},
 		//微信订单页面(1 2 3)
 		{
 			"path": "pages/weixinoreder/orderone",
@@ -62,33 +55,14 @@
 				"navigationBarTitleText": ""
 			}
 		},
-		{
-			"path": "pages/weixinoreder/ordertwo",
-			"style": {
-				"navigationBarTitleText": ""
-			}
-		},
-		{
-			"path": "pages/weixinoreder/orderthree",
-			"style": {
-				"navigationBarTitleText": ""
-			}
-		}
 		//搜索页面
-		, {
+		{
 			"path": "pages/search/serch",
 			"style": {
 				"navigationBarTitleText": ""
 			}
 		},
-		//车上燃气瓶（空瓶）
-		{
-			"path": "pages/truckcar/kongcar",
-			"style": {
-				"navigationBarTitleText": ""
-			}
-		},
-		//满瓶
+		//车上燃气瓶
 		{
 			"path": "pages/truckcar/fullcar",
 			"style": {
@@ -190,13 +164,6 @@
 
 		{
 			"path": "pages/myself/personal",
-			"style": {
-				"navigationBarTitleText": ""
-			}
-		},
-		//地区
-		{
-			"path": "pages/district/districts",
 			"style": {
 				"navigationBarTitleText": ""
 			}

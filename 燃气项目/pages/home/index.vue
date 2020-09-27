@@ -12,7 +12,7 @@
 
 			<view class="nav">
 				<ul class="navlist">
-					<li v-for="(val, key) in navList" :key="key" @click="tolever(val.patRouder, key)">
+					<li v-for="(val, key) in navList" :key="key" @click="tolever(key)">
 						<image :src="val.imgurl" alt="#"></image>
 						<p>{{ val.text }}</p>
 					</li>
@@ -49,17 +49,14 @@ export default {
 				{
 					imgurl: '../../static/image/PositionFocus.png',
 					text: '空瓶装车',
-					patRouder: 'ewm'
 				},
 				{
 					imgurl: '../../static/image/PositionFocuss.png',
 					text: '满瓶装车',
-					patRouder: 'ewm'
 				},
 				{
 					imgurl: '../../static/image/UserSingleSelect.png',
 					text: '新增用户',
-					patRouder: 'unit'
 				}
 			],
 			containerBodyList: [
@@ -142,138 +139,8 @@ export default {
 				url: '../search/serch'
 			});
 		},
-		tolever(path, index) {
-			/* if (index == 0) {
-					uni.scanCode({
-						onlyFromCamera: false,
-						scanType: ['qrCode'],
-						success: (res) => {
-							console.log('扫码:',res)
-							//截取字符串（/）以后的数字
-							let src = res.result.split("/");
-							this.data = src[src.length - 1]; //这是最终截取后的  6013213724  123
-							//扫码成功发送请求	 { ，}字符串的格式
-							var data = JSON.stringify({
-								gasLabelNumber: this.data
-							}); //{gasLabelNumber:'123'}
-							console.log(data + '测试');
-							//防止出现二次以后扫码或者扫码不成功的情况
-							//判断里面是否有重复的存在 有 就pass掉 没有就直接push进去
-							if (this.arrs.length > 1) {
-								for (let i in arrs) {
-									if (arrs[i].gasLabelNumber != data.gasLabelNumber) {
-										data += ',' + this.data; //以对象的方式进行传值 
-									}
-								}
-							} else {
-								data
-							}
-							console.log(data)
-							let parm = {
-								token: this.token,
-								loginMark: this.loginMark,
-								data: data
-							};
-							//转字符串
-							parm = JSON.stringify(parm)
-							uni.request({
-								url: apiAddres + Dispatcher,
-								header: {
-									'Content-Type': 'application/json'
-								},
-								method: 'POST',
-								data: parm, //data:{}
-								success: (res) => {
-									console.log(res)
-									if (res.data.code == 200) {
-
-										uni.showToast({
-											icon: 'success',
-											title: '空瓶装车成功',
-											duration: 1000
-										});
-									}
-									if (res.data.code == 400) {
-										uni.showToast({
-											icon: 'none',
-											title: '无法找到气瓶状态【气瓶：123】',
-											duration: 2000
-										});
-									}
-								},
-								fail: (err) => {
-									if (res.data.code == 500) {
-										uni.showToast({
-											icon: 'none',
-											title: '网络异常',
-											duration: 500
-										});
-									}
-								}
-							})
-						},
-					})
-				}
-				if (index == 1) {
-					uni.scanCode({
-						onlyFromCamera: false,
-						scanType: ['qrCode'],
-						success: (res) => {
-							//截取字符串（/）以后的数字
-							let src = res.result.split("/");
-							this.data = src[src.length - 1]; //这是最终截取后的  6013213724  123
-							//扫码成功发送请求	 { ，}字符串的格式
-							var data = JSON.stringify({
-								gasLabelNumber: this.data
-							}); //{gasLabelNumber:'123'}
-							console.log(data + '测试');
-							//防止出现二次以后扫码或者扫码不成功的情况
-							//判断里面是否有重复的存在 有 就pass掉 没有就直接push进去
-							if (this.arrs.length > 1) {
-								for (let i in arrs) {
-									if (arrs[i].gasLabelNumber != data.gasLabelNumber) {
-										data += ',' + this.data; //以对象的方式进行传值 
-									}
-								}
-							} else {
-								data
-							}
-							console.log(data)
-							let parm = {
-								token: this.token,
-								loginMark: this.loginMark,
-								data: data
-							};
-							//转字符串
-							parm = JSON.stringify(parm)
-							uni.request({
-								url: apiAddres + zDispatcher,
-								header: {
-									'Content-Type': 'application/json'
-								},
-								method: 'POST',
-								data: parm, //data:{}
-								success: (res) => {
-									console.log(res)
-									if (res.data.code == 200) {
-										uni.showToast({
-											icon: 'success',
-											title: '满瓶装车成功',
-											duration: 1000
-										});
-									}
-									if (res.data.code == 400) {
-										uni.showToast({
-											icon: 'none',
-											title: '气瓶当前责任主体类型不匹配【气瓶：123】',
-											duration: 2000
-										});
-									}
-								},
-							})
-						},
-					})
-				} */
+		tolever(index) {
+			
 			if (index == 0) {
 				uni.navigateTo({
 					url: '../scancode/empty'
@@ -286,7 +153,7 @@ export default {
 			}
 			if (index == 2) {
 				uni.navigateTo({
-					url: path
+					url: './unit'
 				});
 			}
 		},
